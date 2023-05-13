@@ -22,16 +22,21 @@ paths:
                   type: string
   /authors:
     get:
-      summary: List of authors
+      summary: List of authors 
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  date_of_birth:
+                    type: integer
   /authors/{name}:
     get:
       summary: An author
