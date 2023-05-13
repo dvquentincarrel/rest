@@ -1,0 +1,409 @@
+openapi: 3.0.2
+info:
+  title: "Books MI7"
+  version: 1.0.0
+  description: This API allows you to navigate informations about books
+  contact:
+    email: camille.bonacorsi@etu.univ-grenoble-alpes.fr, delon.loic@etu.univ-grenoble-alpes.fr, evan.galleron@etu.univ-grenoble-alpes.fr, quentin.carrel@etu.univ-grenoble-alpes.fr
+    name: Bonacorsi Camille, Carrel Quentin, Delon Loïc, Galleron Evan
+
+paths:
+  /:
+    get:
+      summary: Entry points
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /authors:
+    get:
+      summary: List of authors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /authors/{name}:
+    get:
+      summary: An author
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Name of the author
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Author not found
+  /authors/{name}/decades:
+    get:
+      summary: Decades in which the author wrote pieces
+      parameters:
+        - name: name
+          schema:
+            type: string
+          in: path
+          required: true
+          description: Name of the author
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/decades/{decade}:
+    get:
+      summary: Genres of works written in this decade
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+          - name: decade
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/decades/{decade}/{genre}:
+    get:
+      summary: Pieces written of that genre
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+          - name: decade
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Decade of creation
+          - name: genre
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Genre of the piece
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/decades/{decade}/{genre}/{piece}:
+    get:
+      summary: Information about the piece & related editions
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+          - name: decade
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Decade of creation
+          - name: genre
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Genre of the piece
+          - name: piece
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the piece
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/decades/{decade}/genre/{genre}/pieces/{piece}/editions/{isbn}:
+    get:
+      summary: Information about the chosen edition
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+          - name: decade
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Decade of creation
+          - name: genre
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Genre of the piece
+          - name: piece
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the piece
+          - name: isbn
+            schema:
+              type: string
+            in: path
+            required: true
+            description: ISBN of the published book
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/pieces:
+    get:
+      summary: Pieces written by that author
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the author
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/pieces/{piece}:
+    get:
+      summary: Information about the piece & related editions
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/editions:
+    get:
+      summary: Published pieces by the author
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /authors/{name}/editions/{edition}:
+    get:
+      summary: Information about the chosen edition
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /editors:
+    get:
+      summary: List of editors
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}:
+    get:
+      summary: Information about the editor, available endpoints
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/collections:
+    get:
+      summary: List of collections by that editor
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/collections/{collection}:
+    get:
+      summary: Information about that collection & available endpoints
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/collections/{collection}/edition:
+    get:
+      summary: Editions published for that collection
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/collections/{collection}/edition/{isbn}:
+    get:
+      summary: Information about that published piece
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/editions:
+    get:
+      summary: List of published pieces by that editor
+      parameters:
+          - name:
+            schema:
+              type: string
+            in: path
+            required: true
+            description:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /editors/{name}/editions/{isbn}:
+    get:
+      summary: Information about that published piece
+      parameters:
+          - name: name
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the editor
+          - name: isbn
+            schema:
+              type: string
+            in: path
+            required: true
+            description: ISBN of the published book
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
