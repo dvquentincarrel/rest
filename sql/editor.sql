@@ -1,0 +1,12 @@
+BEGIN TRANSACTION;
+insert into editor (id, name) values (1, 'Green-Turner');
+insert into editor (id, name) values (2, 'McKenzie and Sons');
+insert into editor (id, name) values (3, 'Ritchie-Gibson');
+insert into editor (id, name) values (4, 'Reilly, Bechtelar and Rolfson');
+insert into editor (id, name) values (5, 'Dooley PLC');
+insert into editor (id, name) values (6, 'Parisian, Hane and Volkman');
+insert into editor (id, name) values (7, 'Ward Inc');
+insert into editor (id, name) values (8, 'Heller and Sons');
+insert into editor (id, name) values (9, 'Conroy-Larson');
+insert into editor (id, name) values (10, 'Nolan Group');
+COMMIT;

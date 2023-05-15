@@ -1,0 +1,13 @@
+BEGIN TRANSACTION;
+insert into genre (id, name) values (1, 'fantasy');
+insert into genre (id, name) values (2, 'science-fiction');
+insert into genre (id, name) values (3, 'action-adventure');
+insert into genre (id, name) values (4, 'mystery');
+insert into genre (id, name) values (5, 'horror');
+insert into genre (id, name) values (6, 'thriller');
+insert into genre (id, name) values (7, 'historical-fiction');
+insert into genre (id, name) values (8, 'short-story');
+insert into genre (id, name) values (9, 'biography');
+insert into genre (id, name) values (10, 'history');
+insert into genre (id, name) values (11, 'essay');
+COMMIT;

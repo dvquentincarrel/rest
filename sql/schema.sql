@@ -5,9 +5,9 @@ CREATE TABLE author (
     date_of_birth text
 );
 
-CREATE TABLE decades (
+CREATE TABLE decade (
     id integer PRIMARY KEY,
-    number integer
+    range text
 );
 
 CREATE TABLE genre (
