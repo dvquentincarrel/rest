@@ -29,14 +29,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  date_of_birth:
-                    type: integer
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    date_of_birth:
+                      type: string
   /authors/{name}:
     get:
       summary: An author
@@ -79,7 +81,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
   /authors/{name}/decades/{decade}:
     get:
       summary: Genres of works written in this decade
@@ -131,10 +135,12 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
   /authors/{name}/decades/{decade}/{genre}/{piece}:
     get:
-      summary: Information about the piece & related editions
+      summary: Information about the piece
       parameters:
           - name: name
             schema:
@@ -207,7 +213,14 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  title:
+                    type: string
+                  isbn:
+                    type: string
+                  year:
+                    type: integer
   /authors/{name}/pieces:
     get:
       summary: Pieces written by that author
@@ -224,10 +237,12 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
   /authors/{name}/pieces/{piece}:
     get:
-      summary: Information about the piece & related editions
+      summary: Information about the piece
       parameters:
           - name:
             schema:
@@ -258,7 +273,16 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    isbn:
+                      type: string
+                    year:
+                      type: integer
   /authors/{name}/editions/{edition}:
     get:
       summary: Information about the chosen edition
@@ -275,8 +299,14 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-
+                type: object
+                properties:
+                  title:
+                    type: string
+                  isbn:
+                    type: string
+                  year:
+                    type: integer
   /editors:
     get:
       summary: List of editors
@@ -293,10 +323,12 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
   /editors/{name}:
     get:
-      summary: Information about the editor, available endpoints
+      summary: Information about the editor
       parameters:
           - name:
             schema:
@@ -327,10 +359,12 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
   /editors/{name}/collections/{collection}:
     get:
-      summary: Information about that collection & available endpoints
+      summary: Information about that collection
       parameters:
           - name:
             schema:
@@ -361,7 +395,16 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    isbn:
+                      type: string
+                    year:
+                      type: integer
   /editors/{name}/collections/{collection}/edition/{isbn}:
     get:
       summary: Information about that published piece
@@ -378,7 +421,14 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  title:
+                    type: string
+                  isbn:
+                    type: string
+                  year:
+                    type: integer
   /editors/{name}/editions:
     get:
       summary: List of published pieces by that editor
@@ -395,7 +445,16 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    isbn:
+                      type: string
+                    year:
+                      type: integer
   /editors/{name}/editions/{isbn}:
     get:
       summary: Information about that published piece
@@ -418,4 +477,11 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  title:
+                    type: string
+                  isbn:
+                    type: string
+                  year:
+                    type: integer
