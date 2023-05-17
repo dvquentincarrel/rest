@@ -6,24 +6,18 @@
  *
  * returns List
  **/
-exports.authorsGET = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "surname" : "surname",
-  "date_of_birth" : "date_of_birth",
-  "name" : "name"
-}, {
-  "surname" : "surname",
-  "date_of_birth" : "date_of_birth",
-  "name" : "name"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsGET = function(db) {
+    return new Promise(function(resolve, reject) {
+        db.all('SELECT name, surname, date_of_birth FROM author', (err, rows) => {
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`/authors/${row.name}`,
+                    'method':'GET',
+                }
+            })
+            resolve(rows)
+        })
+    });
 }
 
 
@@ -34,16 +28,16 @@ exports.authorsGET = function() {
  * decade String Name of the author
  * returns String
  **/
-exports.authorsNameDecadesDecadeGET = function(name,decade) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameDecadesDecadeGET = function(db,name,decade) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -55,16 +49,16 @@ exports.authorsNameDecadesDecadeGET = function(name,decade) {
  * genre String Genre of the piece
  * returns List
  **/
-exports.authorsNameDecadesDecadeGenreGET = function(name,decade,genre) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameDecadesDecadeGenreGET = function(db,name,decade,genre) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -78,20 +72,20 @@ exports.authorsNameDecadesDecadeGenreGET = function(name,decade,genre) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(name,decade,genre,piece,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(db,name,decade,genre,piece,isbn) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -104,16 +98,16 @@ exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(
  * piece String Name of the piece
  * returns String
  **/
-exports.authorsNameDecadesDecadeGenrePieceGET = function(name,decade,genre,piece) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameDecadesDecadeGenrePieceGET = function(db,name,decade,genre,piece) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -123,16 +117,16 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(name,decade,genre,piece
  * name String Name of the author
  * returns List
  **/
-exports.authorsNameDecadesGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameDecadesGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -142,24 +136,24 @@ exports.authorsNameDecadesGET = function(name) {
  * name String Name of the author
  * returns List
  **/
-exports.authorsNameEditionsGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.authorsNameEditionsGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 }, {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 } ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -170,20 +164,20 @@ exports.authorsNameEditionsGET = function(name) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.authorsNameEditionsIsbnGET = function(name,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.authorsNameEditionsIsbnGET = function(db,name,isbn) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -193,20 +187,20 @@ exports.authorsNameEditionsIsbnGET = function(name,isbn) {
  * name String Name of the author
  * returns inline_response_200
  **/
-exports.authorsNameGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "surname" : "surname",
-  "date_of_birth" : "date_of_birth",
-  "name" : "name"
+exports.authorsNameGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+    "surname" : "surname",
+    "date_of_birth" : "date_of_birth",
+    "name" : "name"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -216,16 +210,16 @@ exports.authorsNameGET = function(name) {
  * name String Name of the author
  * returns List
  **/
-exports.authorsNamePiecesGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNamePiecesGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -236,16 +230,16 @@ exports.authorsNamePiecesGET = function(name) {
  * piece String Name of the piece
  * returns String
  **/
-exports.authorsNamePiecesPieceGET = function(name,piece) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNamePiecesPieceGET = function(db,name,piece) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -254,16 +248,16 @@ exports.authorsNamePiecesPieceGET = function(name,piece) {
  *
  * returns List
  **/
-exports.editorsGET = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.editorsGET = function(db) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -274,24 +268,24 @@ exports.editorsGET = function() {
  * collection String Name of the collection
  * returns List
  **/
-exports.editorsNameCollectionsCollectionEditionGET = function(name,collection) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.editorsNameCollectionsCollectionEditionGET = function(db,name,collection) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 }, {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 } ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -303,20 +297,20 @@ exports.editorsNameCollectionsCollectionEditionGET = function(name,collection) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.editorsNameCollectionsCollectionEditionIsbnGET = function(name,collection,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.editorsNameCollectionsCollectionEditionIsbnGET = function(db,name,collection,isbn) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -326,16 +320,16 @@ exports.editorsNameCollectionsCollectionEditionIsbnGET = function(name,collectio
  * name String Name of the editor
  * returns String
  **/
-exports.editorsNameCollectionsCollectionGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.editorsNameCollectionsCollectionGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -345,16 +339,16 @@ exports.editorsNameCollectionsCollectionGET = function(name) {
  * name String Name of the editor
  * returns List
  **/
-exports.editorsNameCollectionsGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.editorsNameCollectionsGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -364,24 +358,24 @@ exports.editorsNameCollectionsGET = function(name) {
  * name String Name of the editor
  * returns List
  **/
-exports.editorsNameEditionsGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.editorsNameEditionsGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 }, {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 } ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -392,20 +386,20 @@ exports.editorsNameEditionsGET = function(name) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.editorsNameEditionsIsbnGET = function(name,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
+exports.editorsNameEditionsIsbnGET = function(db,name,isbn) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+    "year" : 0,
+    "isbn" : "isbn",
+    "title" : "title"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -415,16 +409,16 @@ exports.editorsNameEditionsIsbnGET = function(name,isbn) {
  * name String Name of the editor
  * returns String
  **/
-exports.editorsNameGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.editorsNameGET = function(db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
 }
 
 
@@ -433,15 +427,14 @@ exports.editorsNameGET = function(name) {
  *
  * returns List
  **/
-exports.rootGET = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.rootGET = function(db) {
+    return new Promise(function(resolve, reject) {
+        resolve({'links':
+            [
+                {'href':'/authors','method':'GET'},
+                {'href':'/editors','method':'GET'}
+            ]
+        });
+    });
 }
 
