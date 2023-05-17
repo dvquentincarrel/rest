@@ -96,7 +96,7 @@ paths:
             description: Name of the author
           - name: decade
             schema:
-              type: integer
+              type: string
             in: path
             required: true
             description: Name of the author
@@ -119,7 +119,7 @@ paths:
             description: Name of the author
           - name: decade
             schema:
-              type: integer
+              type: string
             in: path
             required: true
             description: Decade of creation
@@ -150,7 +150,7 @@ paths:
             description: Name of the author
           - name: decade
             schema:
-              type: integer
+              type: string
             in: path
             required: true
             description: Decade of creation
@@ -185,7 +185,7 @@ paths:
             description: Name of the author
           - name: decade
             schema:
-              type: integer
+              type: string
             in: path
             required: true
             description: Decade of creation
