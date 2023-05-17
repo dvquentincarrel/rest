@@ -1,0 +1,598 @@
+openapi: 3.0.2
+info:
+  title: Books MI7
+  description: This API allows you to navigate informations about books
+  contact:
+    name: "Bonacorsi Camille, Carrel Quentin, Delon Loïc, Galleron Evan"
+    email: "camille.bonacorsi@etu.univ-grenoble-alpes.fr, delon.loic@etu.univ-grenoble-alpes.fr,\
+      \ evan.galleron@etu.univ-grenoble-alpes.fr, quentin.carrel@etu.univ-grenoble-alpes.fr"
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /:
+    get:
+      summary: Entry points
+      operationId: rootGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors:
+    get:
+      summary: List of authors
+      operationId: authorsGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}:
+    get:
+      summary: An author
+      operationId: authorsNameGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Author not found
+      x-swagger-router-controller: Default
+  /authors/{name}/decades:
+    get:
+      summary: Decades in which the author wrote pieces
+      operationId: authorsNameDecadesGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/decades/{decade}:
+    get:
+      summary: Genres of works written in this decade
+      operationId: authorsNameDecadesDecadeGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: decade
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/decades/{decade}/{genre}:
+    get:
+      summary: Pieces written of that genre
+      operationId: authorsNameDecadesDecadeGenreGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: decade
+        in: path
+        description: Decade of creation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: genre
+        in: path
+        description: Genre of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/decades/{decade}/{genre}/{piece}:
+    get:
+      summary: Information about the piece
+      operationId: authorsNameDecadesDecadeGenrePieceGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: decade
+        in: path
+        description: Decade of creation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: genre
+        in: path
+        description: Genre of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: piece
+        in: path
+        description: Name of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/decades/{decade}/genre/{genre}/pieces/{piece}/editions/{isbn}:
+    get:
+      summary: Information about the chosen edition
+      operationId: authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: decade
+        in: path
+        description: Decade of creation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: genre
+        in: path
+        description: Genre of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: piece
+        in: path
+        description: Name of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: isbn
+        in: path
+        description: ISBN of the published book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+      x-swagger-router-controller: Default
+  /authors/{name}/pieces:
+    get:
+      summary: Pieces written by that author
+      operationId: authorsNamePiecesGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/pieces/{piece}:
+    get:
+      summary: Information about the piece
+      operationId: authorsNamePiecesPieceGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: piece
+        in: path
+        description: Name of the piece
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/editions:
+    get:
+      summary: Published pieces by the author
+      operationId: authorsNameEditionsGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /authors/{name}/editions/{isbn}:
+    get:
+      summary: Information about the chosen edition
+      operationId: authorsNameEditionsIsbnGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: isbn
+        in: path
+        description: ISBN of the published book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+      x-swagger-router-controller: Default
+  /editors:
+    get:
+      summary: List of editors
+      operationId: editorsGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}:
+    get:
+      summary: Information about the editor
+      operationId: editorsNameGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}/collections:
+    get:
+      summary: List of collections by that editor
+      operationId: editorsNameCollectionsGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}/collections/{collection}:
+    get:
+      summary: Information about that collection
+      operationId: editorsNameCollectionsCollectionGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}/collections/{collection}/edition:
+    get:
+      summary: Editions published for that collection
+      operationId: editorsNameCollectionsCollectionEditionGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: collection
+        in: path
+        description: Name of the collection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}/collections/{collection}/edition/{isbn}:
+    get:
+      summary: Information about that published piece
+      operationId: editorsNameCollectionsCollectionEditionIsbnGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: collection
+        in: path
+        description: Name of the collection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: isbn
+        in: path
+        description: ISBN of the published book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+      x-swagger-router-controller: Default
+  /editors/{name}/editions:
+    get:
+      summary: List of published pieces by that editor
+      operationId: editorsNameEditionsGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /editors/{name}/editions/{isbn}:
+    get:
+      summary: Information about that published piece
+      operationId: editorsNameEditionsIsbnGET
+      parameters:
+      - name: name
+        in: path
+        description: Name of the editor
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: isbn
+        in: path
+        description: ISBN of the published book
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+      x-swagger-router-controller: Default
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        date_of_birth:
+          type: string
+      example:
+        surname: surname
+        date_of_birth: date_of_birth
+        name: name
+    inline_response_200_1:
+      type: object
+      properties:
+        title:
+          type: string
+        isbn:
+          type: string
+        year:
+          type: integer
+      example:
+        year: 0
+        isbn: isbn
+        title: title
