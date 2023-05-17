@@ -1,6 +1,6 @@
 BEGIN TRANSACTION;
-insert into author (id, surname, name, date_of_birth) values (1, 'Blake', 'Crouch', '1978-10-15');
-insert into author (id, surname, name, date_of_birth) values (2, 'Douglas', 'Adams', '1952-03-11');
+insert into author (id, surname, name, date_of_birth) values (1, 'Crouch', 'Blake', '1978-10-15');
+insert into author (id, surname, name, date_of_birth) values (2, 'Adams', 'Douglas', '1952-03-11');
 insert into author (id, surname, name, date_of_birth) values (3, 'Frammingham', 'Eamon', '1978-11-18');
 insert into author (id, surname, name, date_of_birth) values (4, 'Berrygun', 'Adelbert', '1958-02-27');
 insert into author (id, surname, name, date_of_birth) values (5, 'Dyne', 'Jackie', '1947-06-20');
