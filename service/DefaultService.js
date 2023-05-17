@@ -26,7 +26,7 @@ exports.authorsGET = function(db) {
  *
  * name String Name of the author
  * decade String Name of the author
- * returns String
+ * returns List
  **/
 exports.authorsNameDecadesDecadeGET = function(db,name,decade) {
     return new Promise(function(resolve, reject) {
