@@ -4,8 +4,7 @@ info:
   description: This API allows you to navigate informations about books
   contact:
     name: "Bonacorsi Camille, Carrel Quentin, Delon Loïc, Galleron Evan"
-    email: "camille.bonacorsi@etu.univ-grenoble-alpes.fr, delon.loic@etu.univ-grenoble-alpes.fr,\
-      \ evan.galleron@etu.univ-grenoble-alpes.fr, quentin.carrel@etu.univ-grenoble-alpes.fr"
+    email: quentin.carrel@etu.univ-grenoble-alpes.fr
   version: 1.0.0
 servers:
 - url: /
