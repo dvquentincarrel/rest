@@ -6,12 +6,12 @@
  *
  * returns List
  **/
-exports.authorsGET = function(db) {
+exports.authorsGET = function(url,db) {
     return new Promise(function(resolve, reject) {
         db.all('SELECT name, surname, date_of_birth FROM author', (err, rows) => {
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`/authors/${row.name}`,
+                    'href':`${url}/${row.name}`.replace('//','/'),
                     'method':'GET',
                 }
             })
@@ -28,15 +28,31 @@ exports.authorsGET = function(db) {
  * decade String Name of the author
  * returns List
  **/
-exports.authorsNameDecadesDecadeGET = function(db,name,decade) {
+exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        db.all(`
+        SELECT g.name
+        FROM decade d, author a, author_decade ad, genre g, genre_decade gd
+        WHERE
+            d.id = ad.decade AND
+            a.id = ad.author AND
+            a.name='${name}' AND
+            d.range='${decade}' AND
+            gd.decade=d.id AND
+            gd.genre=g.id
+            `, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.name}`.replace('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
     });
 }
 
@@ -49,15 +65,41 @@ exports.authorsNameDecadesDecadeGET = function(db,name,decade) {
  * genre String Genre of the piece
  * returns List
  **/
-exports.authorsNameDecadesDecadeGenreGET = function(db,name,decade,genre) {
+// TODO
+exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ "", "" ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        db.all(`
+        SELECT g.name
+        FROM 
+            decade d,
+            author a,
+            author_decade ad,
+            genre g,
+            piece p,
+            genre_decade gd, 
+            piece_genre pg, 
+        WHERE
+            d.id = ad.decade AND
+            a.id = ad.author AND
+            a.name='${name}' AND
+            d.range='${decade}' AND
+            gd.decade=d.id AND
+            gd.genre=g.id AND
+            pg.genre=g.id AND
+            pg.piece=g.id
+            `, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.name}`.replace('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
     });
 }
 
@@ -72,7 +114,8 @@ exports.authorsNameDecadesDecadeGenreGET = function(db,name,decade,genre) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(db,name,decade,genre,piece,isbn) {
+// TODO
+exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(url,db,name,decade,genre,piece,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -98,7 +141,8 @@ exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(
  * piece String Name of the piece
  * returns String
  **/
-exports.authorsNameDecadesDecadeGenrePieceGET = function(db,name,decade,genre,piece) {
+// TODO
+exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genre,piece) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = "";
@@ -117,15 +161,28 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(db,name,decade,genre,pi
  * name String Name of the author
  * returns List
  **/
-exports.authorsNameDecadesGET = function(db,name) {
+exports.authorsNameDecadesGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ "", "" ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        db.all(`
+        SELECT d.range
+        FROM decade d, author a, author_decade ad
+        WHERE
+            d.id = ad.decade AND
+            a.id = ad.author AND
+            a.name='${name}'
+        `, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.range}`.replace('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
     });
 }
 
@@ -136,7 +193,8 @@ exports.authorsNameDecadesGET = function(db,name) {
  * name String Name of the author
  * returns List
  **/
-exports.authorsNameEditionsGET = function(db,name) {
+// TODO
+exports.authorsNameEditionsGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
@@ -164,7 +222,8 @@ exports.authorsNameEditionsGET = function(db,name) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.authorsNameEditionsIsbnGET = function(db,name,isbn) {
+// TODO
+exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -187,19 +246,26 @@ exports.authorsNameEditionsIsbnGET = function(db,name,isbn) {
  * name String Name of the author
  * returns inline_response_200
  **/
-exports.authorsNameGET = function(db,name) {
+exports.authorsNameGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-    "surname" : "surname",
-    "date_of_birth" : "date_of_birth",
-    "name" : "name"
-};
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        db.all(`
+        SELECT name, surname, date_of_birth
+        FROM author a
+        WHERE
+            a.name='${name}'
+        `, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } 
+            rows[0]['links'] = [
+                { 'href':`${url}/decades`.replace('//','/'), 'method':'GET'},
+                { 'href':`${url}/pieces`.replace('//','/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replace('//','/'), 'method':'GET'},
+            ]
+            console.log(rows)
+            resolve(rows);
+        })
     });
 }
 
@@ -210,7 +276,8 @@ exports.authorsNameGET = function(db,name) {
  * name String Name of the author
  * returns List
  **/
-exports.authorsNamePiecesGET = function(db,name) {
+// TODO
+exports.authorsNamePiecesGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ "", "" ];
@@ -230,7 +297,8 @@ exports.authorsNamePiecesGET = function(db,name) {
  * piece String Name of the piece
  * returns String
  **/
-exports.authorsNamePiecesPieceGET = function(db,name,piece) {
+// TODO
+exports.authorsNamePiecesPieceGET = function(url,db,name,piece) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = "";
@@ -248,7 +316,8 @@ exports.authorsNamePiecesPieceGET = function(db,name,piece) {
  *
  * returns List
  **/
-exports.editorsGET = function(db) {
+// TODO
+exports.editorsGET = function(url,db) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ "", "" ];
@@ -268,7 +337,8 @@ exports.editorsGET = function(db) {
  * collection String Name of the collection
  * returns List
  **/
-exports.editorsNameCollectionsCollectionEditionGET = function(db,name,collection) {
+// TODO
+exports.editorsNameCollectionsCollectionEditionGET = function(url,db,name,collection) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
@@ -297,7 +367,8 @@ exports.editorsNameCollectionsCollectionEditionGET = function(db,name,collection
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.editorsNameCollectionsCollectionEditionIsbnGET = function(db,name,collection,isbn) {
+// TODO
+exports.editorsNameCollectionsCollectionEditionIsbnGET = function(url,db,name,collection,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -320,7 +391,8 @@ exports.editorsNameCollectionsCollectionEditionIsbnGET = function(db,name,collec
  * name String Name of the editor
  * returns String
  **/
-exports.editorsNameCollectionsCollectionGET = function(db,name) {
+// TODO
+exports.editorsNameCollectionsCollectionGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = "";
@@ -339,7 +411,8 @@ exports.editorsNameCollectionsCollectionGET = function(db,name) {
  * name String Name of the editor
  * returns List
  **/
-exports.editorsNameCollectionsGET = function(db,name) {
+// TODO
+exports.editorsNameCollectionsGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ "", "" ];
@@ -358,7 +431,8 @@ exports.editorsNameCollectionsGET = function(db,name) {
  * name String Name of the editor
  * returns List
  **/
-exports.editorsNameEditionsGET = function(db,name) {
+// TODO
+exports.editorsNameEditionsGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
@@ -386,7 +460,8 @@ exports.editorsNameEditionsGET = function(db,name) {
  * isbn String ISBN of the published book
  * returns inline_response_200_1
  **/
-exports.editorsNameEditionsIsbnGET = function(db,name,isbn) {
+// TODO
+exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
@@ -409,7 +484,8 @@ exports.editorsNameEditionsIsbnGET = function(db,name,isbn) {
  * name String Name of the editor
  * returns String
  **/
-exports.editorsNameGET = function(db,name) {
+// TODO
+exports.editorsNameGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = "";
@@ -427,7 +503,7 @@ exports.editorsNameGET = function(db,name) {
  *
  * returns List
  **/
-exports.rootGET = function(db) {
+exports.rootGET = function(url,db) {
     return new Promise(function(resolve, reject) {
         resolve({'links':
             [
