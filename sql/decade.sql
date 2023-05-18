@@ -1,10 +1,7 @@
 BEGIN TRANSACTION;
-insert into decade (id, range) values (1, '1920-1930');
-insert into decade (id, range) values (2, '1930-1940');
-insert into decade (id, range) values (3, '1940-1950');
-insert into decade (id, range) values (4, '1950-1960');
-insert into decade (id, range) values (5, '1960-1970');
-insert into decade (id, range) values (6, '1970-1980');
-insert into decade (id, range) values (7, '1980-1990');
-insert into decade (id, range) values (8, '1990-2000');
+insert into decade (id, range) values (01, '1980-1990');
+insert into decade (id, range) values (02, '1990-2000');
+insert into decade (id, range) values (03, '2000-2010');
+insert into decade (id, range) values (04, '2010-2020');
+insert into decade (id, range) values (05, '2020-2030');
 COMMIT;
