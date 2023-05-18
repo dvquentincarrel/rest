@@ -7,6 +7,51 @@ info:
     email: quentin.carrel@etu.univ-grenoble-alpes.fr
     name: Bonacorsi Camille, Carrel Quentin, Delon Loïc, Galleron Evan
 
+components:
+  schemas:
+    author:
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        date_of_birth:
+          type: string
+    decade:
+      properties:
+        range:
+          type: string
+    genre:
+      properties:
+        name:
+          type: string
+    piece:
+      properties:
+        title:
+          type: string
+    edition:
+      properties:
+        title:
+          type: string
+        isbn:
+          type: string
+        year:
+          type: integer
+    editor:
+      properties:
+        name:
+          type: string
+    collection:
+      properties:
+        name:
+          type: string
+    links:
+      properties:
+        href:
+          type: string
+        method:
+          type: string
+
 paths:
   /:
     get:
@@ -17,9 +62,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                $ref: '#/components/schemas/links'
   /authors:
     get:
       summary: List of authors 
@@ -31,17 +74,20 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    surname:
-                      type: string
-                    date_of_birth:
-                      type: string
+                  $ref: '#/components/schemas/author'
+    put:
+      summary: Add an author
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/author'
+      responses:
+        '200':
+          description: OK
   /authors/{name}:
     get:
-      summary: An author
+      summary: Informations about an author
       parameters:
         - name: name
           in: path
@@ -55,16 +101,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  surname:
-                    type: string
-                  date_of_birth:
-                    type: string
+                $ref: '#/components/schemas/author'
         '400':
-          description: Author not found
+          description: No author found
   /authors/{name}/decades:
     get:
       summary: Decades in which the author wrote pieces
@@ -83,10 +122,12 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/decade'
+        '400':
+          description: No decade found
   /authors/{name}/decades/{decade}:
     get:
-      summary: Genres of works written in this decade
+      summary: Information about the decade and genres of works written in this decade
       parameters:
           - name: name
             schema:
@@ -106,12 +147,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  decade:
+                    $ref: '#/components/schemas/decade'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/genre'
+        '400':
+          description: Decade not found
   /authors/{name}/decades/{decade}/{genre}:
     get:
-      summary: Pieces written of that genre
+      summary: Informations about the genre and pieces of that genre
       parameters:
           - name: name
             schema:
@@ -137,12 +185,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                type: object
+                properties:
+                  decade:
+                    $ref: '#/components/schemas/genre'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/piece'
+        '400':
+          description: Genre not found
   /authors/{name}/decades/{decade}/{genre}/{piece}:
     get:
-      summary: Information about the piece
+      summary: Information about the piece and its editions
       parameters:
           - name: name
             schema:
@@ -174,7 +229,16 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                type: object
+                properties:
+                  decade:
+                    $ref: '#/components/schemas/piece'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/edition'
+        '400':
+          description: Piece not found
   /authors/{name}/decades/{decade}/{genre}/{piece}/{isbn}:
     get:
       summary: Information about the chosen edition
@@ -215,14 +279,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  isbn:
-                    type: string
-                  year:
-                    type: integer
+                $ref: '#/components/schemas/edition'
+        '400':
+          description: Edition not found
   /authors/{name}/pieces:
     get:
       summary: Pieces written by that author
@@ -241,7 +300,9 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/piece'
+        '400':
+          description: No piece found
   /authors/{name}/editions:
     get:
       summary: Published pieces by the author
@@ -260,14 +321,9 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    title:
-                      type: string
-                    isbn:
-                      type: string
-                    year:
-                      type: integer
+                  $ref: '#/components/schemas/edition'
+        '400':
+          description: No edition found
   /authors/{name}/editions/{isbn}:
     get:
       summary: Information about the chosen edition
@@ -290,14 +346,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  isbn:
-                    type: string
-                  year:
-                    type: integer
+                $ref: '#/components/schemas/edition'
+        '400':
+          description: Edition not found
   /editors:
     get:
       summary: List of editors
@@ -309,7 +360,9 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/editor'
+        '400':
+          description: No editor found
   /editors/{name}:
     get:
       summary: Information about the editor
@@ -326,7 +379,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/editor'
+        '400':
+          description: Editor not found
   /editors/{name}/collections:
     get:
       summary: List of collections by that editor
@@ -345,10 +400,12 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/collection'
+        '400':
+          description: No collection found
   /editors/{name}/collections/{collection}:
     get:
-      summary: Information about that collection
+      summary: Information about that collection and its edition
       parameters:
           - name: name
             schema:
@@ -362,40 +419,18 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-  /editors/{name}/collections/{collection}/edition:
-    get:
-      summary: Editions published for that collection
-      parameters:
-          - name: name
-            schema:
-              type: string
-            in: path
-            required: true
-            description: Name of the editor
-          - name: collection
-            schema:
-              type: string
-            in: path
-            required: true
-            description: Name of the collection
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    title:
-                      type: string
-                    isbn:
-                      type: string
-                    year:
-                      type: integer
-  /editors/{name}/collections/{collection}/edition/{isbn}:
+                type: object
+                properties:
+                  collection:
+                    $ref: '#/components/schemas/collection'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/edition'
+        '400':
+          description: Collection not found
+# It would seem that while the specification prohibits having any path lead to more than one resource, having more than one path per resource is not an issue.
+  /editors/{name}/collections/{collection}/{isbn}:
     get:
       summary: Information about that published piece
       parameters:
@@ -423,14 +458,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  isbn:
-                    type: string
-                  year:
-                    type: integer
+                $ref: '#/components/schemas/edition'
+        '400':
+          description: Edition not found
   /editors/{name}/editions:
     get:
       summary: List of published pieces by that editor
@@ -449,14 +479,9 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    title:
-                      type: string
-                    isbn:
-                      type: string
-                    year:
-                      type: integer
+                  $ref: '#/components/schemas/edition'
+        '400':
+          description: No editions found
   /editors/{name}/editions/{isbn}:
     get:
       summary: Information about that published piece
@@ -479,11 +504,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  isbn:
-                    type: string
-                  year:
-                    type: integer
+                $ref: '#/components/schemas/edition'
+        '400':
+          description: Edition not found
