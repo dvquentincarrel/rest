@@ -242,29 +242,6 @@ paths:
                 type: array
                 items:
                   type: string
-  /authors/{name}/pieces/{piece}:
-    get:
-      summary: Information about the piece
-      parameters:
-          - name: name
-            schema:
-              type: string
-            in: path
-            required: true
-            description: Name of the author
-          - name: piece
-            schema:
-              type: string
-            in: path
-            required: true
-            description: Name of the piece
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
   /authors/{name}/editions:
     get:
       summary: Published pieces by the author
