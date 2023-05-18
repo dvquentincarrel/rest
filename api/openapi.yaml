@@ -19,10 +19,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/links'
       x-swagger-router-controller: Default
   /authors:
     get:
@@ -36,12 +33,51 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/inline_response_200'
+                  $ref: '#/components/schemas/author'
                 x-content-type: application/json
+        "400":
+          description: No authors found
+      x-swagger-router-controller: Default
+    put:
+      summary: Add/Overwrite an author
+      operationId: authorsPUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/author'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Malformed request
+      x-swagger-router-controller: Default
+    post:
+      summary: Add/Update an author
+      operationId: authorsPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/author'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Malformed request
+      x-swagger-router-controller: Default
+    delete:
+      summary: Deletes an author
+      operationId: authorsDELETE
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Author didn't exist
       x-swagger-router-controller: Default
   /authors/{name}:
     get:
-      summary: An author
+      summary: Informations about an author
       operationId: authorsNameGET
       parameters:
       - name: name
@@ -58,9 +94,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                $ref: '#/components/schemas/author'
         "400":
-          description: Author not found
+          description: No author found
       x-swagger-router-controller: Default
   /authors/{name}/decades:
     get:
@@ -83,12 +119,14 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/decade'
                 x-content-type: application/json
+        "400":
+          description: No decade found
       x-swagger-router-controller: Default
   /authors/{name}/decades/{decade}:
     get:
-      summary: Genres of works written in this decade
+      summary: Information about the decade and genres of works written in this decade
       operationId: authorsNameDecadesDecadeGET
       parameters:
       - name: name
@@ -113,12 +151,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Decade not found
       x-swagger-router-controller: Default
   /authors/{name}/decades/{decade}/{genre}:
     get:
-      summary: Pieces written of that genre
+      summary: Informations about the genre and pieces of that genre
       operationId: authorsNameDecadesDecadeGenreGET
       parameters:
       - name: name
@@ -151,14 +190,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: Genre not found
       x-swagger-router-controller: Default
   /authors/{name}/decades/{decade}/{genre}/{piece}:
     get:
-      summary: Information about the piece
+      summary: Information about the piece and its editions
       operationId: authorsNameDecadesDecadeGenrePieceGET
       parameters:
       - name: name
@@ -199,13 +237,14 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/inline_response_200_2'
+        "400":
+          description: Piece not found
       x-swagger-router-controller: Default
-  /authors/{name}/decades/{decade}/genre/{genre}/pieces/{piece}/editions/{isbn}:
+  /authors/{name}/decades/{decade}/{genre}/{piece}/{isbn}:
     get:
       summary: Information about the chosen edition
-      operationId: authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET
+      operationId: authorsNameDecadesDecadeGenrePieceIsbnGET
       parameters:
       - name: name
         in: path
@@ -253,7 +292,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/edition'
+        "400":
+          description: Edition not found
       x-swagger-router-controller: Default
   /authors/{name}/pieces:
     get:
@@ -276,38 +317,10 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/piece'
                 x-content-type: application/json
-      x-swagger-router-controller: Default
-  /authors/{name}/pieces/{piece}:
-    get:
-      summary: Information about the piece
-      operationId: authorsNamePiecesPieceGET
-      parameters:
-      - name: name
-        in: path
-        description: Name of the author
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: piece
-        in: path
-        description: Name of the piece
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-                x-content-type: application/json
+        "400":
+          description: No piece found
       x-swagger-router-controller: Default
   /authors/{name}/editions:
     get:
@@ -330,8 +343,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/inline_response_200_1'
+                  $ref: '#/components/schemas/edition'
                 x-content-type: application/json
+        "400":
+          description: No edition found
       x-swagger-router-controller: Default
   /authors/{name}/editions/{isbn}:
     get:
@@ -360,7 +375,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/edition'
+        "400":
+          description: Edition not found
       x-swagger-router-controller: Default
   /editors:
     get:
@@ -374,8 +391,10 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/editor'
                 x-content-type: application/json
+        "400":
+          description: No editor found
       x-swagger-router-controller: Default
   /editors/{name}:
     get:
@@ -396,8 +415,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/editor'
+        "400":
+          description: Editor not found
       x-swagger-router-controller: Default
   /editors/{name}/collections:
     get:
@@ -420,12 +440,14 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/collection'
                 x-content-type: application/json
+        "400":
+          description: No collection found
       x-swagger-router-controller: Default
   /editors/{name}/collections/{collection}:
     get:
-      summary: Information about that collection
+      summary: Information about that collection and its edition
       operationId: editorsNameCollectionsCollectionGET
       parameters:
       - name: name
@@ -442,45 +464,14 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                x-content-type: application/json
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: Collection not found
       x-swagger-router-controller: Default
-  /editors/{name}/collections/{collection}/edition:
-    get:
-      summary: Editions published for that collection
-      operationId: editorsNameCollectionsCollectionEditionGET
-      parameters:
-      - name: name
-        in: path
-        description: Name of the editor
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: collection
-        in: path
-        description: Name of the collection
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/inline_response_200_1'
-                x-content-type: application/json
-      x-swagger-router-controller: Default
-  /editors/{name}/collections/{collection}/edition/{isbn}:
+  /editors/{name}/collections/{collection}/{isbn}:
     get:
       summary: Information about that published piece
-      operationId: editorsNameCollectionsCollectionEditionIsbnGET
+      operationId: editorsNameCollectionsCollectionIsbnGET
       parameters:
       - name: name
         in: path
@@ -512,7 +503,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/edition'
+        "400":
+          description: Edition not found
       x-swagger-router-controller: Default
   /editors/{name}/editions:
     get:
@@ -535,8 +528,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/inline_response_200_1'
+                  $ref: '#/components/schemas/edition'
                 x-content-type: application/json
+        "400":
+          description: No editions found
       x-swagger-router-controller: Default
   /editors/{name}/editions/{isbn}:
     get:
@@ -565,12 +560,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/edition'
+        "400":
+          description: Edition not found
       x-swagger-router-controller: Default
 components:
   schemas:
-    inline_response_200:
-      type: object
+    author:
       properties:
         name:
           type: string
@@ -582,8 +578,25 @@ components:
         surname: surname
         date_of_birth: date_of_birth
         name: name
-    inline_response_200_1:
-      type: object
+    decade:
+      properties:
+        range:
+          type: string
+      example:
+        range: range
+    genre:
+      properties:
+        name:
+          type: string
+      example:
+        name: name
+    piece:
+      properties:
+        title:
+          type: string
+      example:
+        title: title
+    edition:
       properties:
         title:
           type: string
@@ -595,3 +608,92 @@ components:
         year: 0
         isbn: isbn
         title: title
+    editor:
+      properties:
+        name:
+          type: string
+      example:
+        name: name
+    collection:
+      properties:
+        name:
+          type: string
+      example:
+        name: name
+    links:
+      properties:
+        href:
+          type: string
+        method:
+          type: string
+      example:
+        method: method
+        href: href
+    inline_response_200:
+      type: object
+      properties:
+        decade:
+          $ref: '#/components/schemas/decade'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/genre'
+      example:
+        decade:
+          range: range
+        links:
+        - name: name
+        - name: name
+    inline_response_200_1:
+      type: object
+      properties:
+        decade:
+          $ref: '#/components/schemas/genre'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/piece'
+      example:
+        decade:
+          name: name
+        links:
+        - title: title
+        - title: title
+    inline_response_200_2:
+      type: object
+      properties:
+        decade:
+          $ref: '#/components/schemas/piece'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/edition'
+      example:
+        decade:
+          title: title
+        links:
+        - year: 0
+          isbn: isbn
+          title: title
+        - year: 0
+          isbn: isbn
+          title: title
+    inline_response_200_3:
+      type: object
+      properties:
+        collection:
+          $ref: '#/components/schemas/collection'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/edition'
+      example:
+        links:
+        - year: 0
+          isbn: isbn
+          title: title
+        - year: 0
+          isbn: isbn
+          title: title
+        collection:
+          name: name
