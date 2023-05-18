@@ -8,10 +8,11 @@
  **/
 exports.authorsGET = function(url,db) {
     return new Promise(function(resolve, reject) {
-        db.all('SELECT name, surname, date_of_birth FROM author', (err, rows) => {
+        let sql_req = `SELECT name, surname, date_of_birth FROM author`
+        db.all(sql_req, (err, rows) => {
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replace('//','/'),
+                    'href':`${url}/${row.name}`.replaceAll('//','/'),
                     'method':'GET',
                 }
             })
@@ -30,28 +31,35 @@ exports.authorsGET = function(url,db) {
  **/
 exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
     return new Promise(function(resolve, reject) {
-        db.all(`
-        SELECT g.name
-        FROM decade d, author a, author_decade ad, genre g, genre_decade gd
-        WHERE
-            d.id = ad.decade AND
-            a.id = ad.author AND
-            a.name='${name}' AND
-            d.range='${decade}' AND
-            gd.decade=d.id AND
-            gd.genre=g.id
-            `, (err, rows) => {
+        let sql_req = `
+            SELECT DISTINCT g.name
+            FROM decade d, author a, links l, genre g
+            WHERE
+                a.name='${name}' AND
+                d.range='${decade}' AND
+                d.id = l.decade AND
+                a.id = l.author AND
+                g.id = l.genre
+            ORDER BY g.name`
+        db.all(sql_req, (err, rows) => {
             if(err){
                 resolve({'ERROR':err})
                 return
-            } 
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
+                return
+            }
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replace('//','/'),
+                    'href':`${url}/${row.name}`.replaceAll('//','/'),
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            let content = {
+                'decade': decade,
+                'genres': rows
+            }
+            resolve(content);
         })
     });
 }
@@ -65,36 +73,36 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
  * genre String Genre of the piece
  * returns List
  **/
-// TODO
 exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
     return new Promise(function(resolve, reject) {
-        db.all(`
-        SELECT g.name
-        FROM 
-            decade d,
-            author a,
-            author_decade ad,
-            genre g,
-            piece p,
-            genre_decade gd, 
-            piece_genre pg, 
-        WHERE
-            d.id = ad.decade AND
-            a.id = ad.author AND
-            a.name='${name}' AND
-            d.range='${decade}' AND
-            gd.decade=d.id AND
-            gd.genre=g.id AND
-            pg.genre=g.id AND
-            pg.piece=g.id
-            `, (err, rows) => {
+        let sql_req = `
+            SELECT DISTINCT p.title
+            FROM 
+                decade d,
+                author a,
+                genre g,
+                piece p,
+                links l
+            WHERE
+                a.name='${name}' AND
+                d.range='${decade}' AND
+                g.name='${genre}' AND
+                d.id = l.decade AND
+                a.id = l.author AND
+                g.id = l.genre AND
+                p.id = l.piece
+            ORDER BY p.title`
+        db.all(sql_req, (err, rows) => {
             if(err){
                 resolve({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
                 return
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replace('//','/'),
+                    'href':`${url}/${row.title}`.replaceAll('//','/').replaceAll(' ','%20'),
                     'method':'GET',
                 }
             })
@@ -119,10 +127,10 @@ exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-};
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        };
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -143,14 +151,38 @@ exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function(
  **/
 // TODO
 exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genre,piece) {
+    piece = piece.replaceAll('%20',' ');
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM 
+            decade d,
+                author a,
+                genre g,
+                piece p,
+                edition e,
+                links l
+            WHERE
+                a.name='${name}' AND
+                d.range='${decade}' AND
+                g.name='${genre}' AND
+                p.title='${piece}' AND
+                d.id = l.decade AND
+                a.id = l.author AND
+                g.id = l.genre AND
+                p.id = l.piece AND
+                e.id = l.edition
+            ORDER BY p.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
+                return
+            } 
+            resolve(rows);
+        })
     });
 }
 
@@ -163,21 +195,25 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
  **/
 exports.authorsNameDecadesGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        db.all(`
-        SELECT d.range
-        FROM decade d, author a, author_decade ad
-        WHERE
-            d.id = ad.decade AND
-            a.id = ad.author AND
-            a.name='${name}'
-        `, (err, rows) => {
+        let sql_req = `
+            SELECT DISTINCT d.range
+            FROM decade d, author a, links l
+            WHERE
+                d.id = l.decade AND
+                a.id = l.author AND
+                a.name='${name}'
+            ORDER BY d.range`
+        db.all(sql_req, (err, rows) => {
             if(err){
                 resolve({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
                 return
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.range}`.replace('//','/'),
+                    'href':`${url}/${row.range}`.replaceAll('//','/'),
                     'method':'GET',
                 }
             })
@@ -198,14 +234,14 @@ exports.authorsNameEditionsGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-}, {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-} ];
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        }, {
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        } ];
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -227,10 +263,10 @@ exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-};
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        };
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -248,23 +284,27 @@ exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
  **/
 exports.authorsNameGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        db.all(`
-        SELECT name, surname, date_of_birth
-        FROM author a
-        WHERE
-            a.name='${name}'
-        `, (err, rows) => {
+        let sql_req = `
+            SELECT name, surname, date_of_birth
+            FROM author a
+            WHERE
+                a.name='${name}'
+        `
+        db.all(sql_req, (err, rows) => {
+            console.log(rows)
             if(err){
                 resolve({'ERROR':err})
                 return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
+                return
             } 
             rows[0]['links'] = [
-                { 'href':`${url}/decades`.replace('//','/'), 'method':'GET'},
-                { 'href':`${url}/pieces`.replace('//','/'), 'method':'GET'},
-                { 'href':`${url}/editions`.replace('//','/'), 'method':'GET'},
+                { 'href':`${url}/decades`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/pieces`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
             ]
-            console.log(rows)
-            resolve(rows);
+            resolve(rows[0]);
         })
     });
 }
@@ -276,40 +316,38 @@ exports.authorsNameGET = function(url,db,name) {
  * name String Name of the author
  * returns List
  **/
-// TODO
 exports.authorsNamePiecesGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ "", "" ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        let sql_req = `
+            SELECT p.title, d.range, g.name
+            FROM author a, piece p, decade d, genre g, links l
+            WHERE
+                a.name='${name}' AND
+                a.id = l.author AND
+                d.id = l.decade AND
+                g.id = l.genre AND
+                p.id = l.piece
+            ORDER BY p.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'error':err})
+                return
+            } 
+            rows.forEach(row => {
+                let urlArr = url.split('/')
+                urlArr.pop()
+                let newUrl = urlArr.join('/')
+                row['links'] = {
+                'href':`${newUrl}/decades/${row.range}/${row.name}/${row.title}`.replaceAll('//','/').replaceAll(' ','%20'),
+                'method':'get'
+                }
+                delete row['range']
+                delete row['name']
+            })
+            resolve(rows);
+        })
     });
 }
-
-
-/**
- * Information about the piece
- *
- * name String Name of the author
- * piece String Name of the piece
- * returns String
- **/
-// TODO
-exports.authorsNamePiecesPieceGET = function(url,db,name,piece) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
-}
-
 
 /**
  * List of editors
@@ -342,14 +380,14 @@ exports.editorsNameCollectionsCollectionEditionGET = function(url,db,name,collec
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-}, {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-} ];
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        }, {
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        } ];
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -372,10 +410,10 @@ exports.editorsNameCollectionsCollectionEditionIsbnGET = function(url,db,name,co
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-};
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        };
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -436,14 +474,14 @@ exports.editorsNameEditionsGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = [ {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-}, {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-} ];
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        }, {
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        } ];
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
@@ -465,10 +503,10 @@ exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
     return new Promise(function(resolve, reject) {
         var examples = {};
         examples['application/json'] = {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-};
+            "year" : 0,
+            "isbn" : "isbn",
+            "title" : "title"
+        };
         if (Object.keys(examples).length > 0) {
             resolve(examples[Object.keys(examples)[0]]);
         } else {
