@@ -35,8 +35,8 @@ module.exports.authorsNameDecadesDecadeGenreGET = function authorsNameDecadesDec
     });
 };
 
-module.exports.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET = function authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET (req, res, next, name, decade, genre, piece, isbn) {
-  Default.authorsNameDecadesDecadeGenreGenrePiecesPieceEditionsIsbnGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, decade, genre, piece, isbn)
+module.exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function authorsNameDecadesDecadeGenrePieceIsbnGET (req, res, next, name, decade, genre, piece, isbn) {
+  Default.authorsNameDecadesDecadeGenrePieceIsbnGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, decade, genre, piece, isbn)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -105,16 +105,6 @@ module.exports.authorsNamePiecesGET = function authorsNamePiecesGET (req, res, n
     });
 };
 
-module.exports.authorsNamePiecesPieceGET = function authorsNamePiecesPieceGET (req, res, next, name, piece) {
-  Default.authorsNamePiecesPieceGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, piece)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
 module.exports.editorsGET = function editorsGET (req, res, next) {
   Default.editorsGET(`${req['rawHeaders'][1]}/${req.url}`,db)
     .then(function (response) {
@@ -125,18 +115,8 @@ module.exports.editorsGET = function editorsGET (req, res, next) {
     });
 };
 
-module.exports.editorsNameCollectionsCollectionEditionGET = function editorsNameCollectionsCollectionEditionGET (req, res, next, name, collection) {
-  Default.editorsNameCollectionsCollectionEditionGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, collection)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
-module.exports.editorsNameCollectionsCollectionEditionIsbnGET = function editorsNameCollectionsCollectionEditionIsbnGET (req, res, next, name, collection, isbn) {
-  Default.editorsNameCollectionsCollectionEditionIsbnGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, collection, isbn)
+module.exports.editorsNameCollectionsCollectionIsbnGET = function editorsNameCollectionsCollectionIsbnGET (req, res, next, name, collection, isbn) {
+  Default.editorsNameCollectionsCollectionIsbnGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, collection, isbn)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -197,6 +177,36 @@ module.exports.editorsNameGET = function editorsNameGET (req, res, next, name) {
 
 module.exports.rootGET = function rootGET (req, res, next) {
   Default.rootGET(`${req['rawHeaders'][1]}/${req.url}`,db)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.authorsDELETE = function authorsDELETE (req, res, next) {
+  Default.authorsDELETE()
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.authorsPUT = function authorsPUT (req, res, next, body) {
+  Default.authorsPUT(body)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.authorsPOST = function authorsPOST (req, res, next, body) {
+  Default.authorsPOST(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
