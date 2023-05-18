@@ -1,12 +1,12 @@
 BEGIN TRANSACTION;
 insert into author (id, surname, name, date_of_birth) values (1, 'Crouch', 'Blake', '1978-10-15');
-insert into author (id, surname, name, date_of_birth) values (2, 'Adams', 'Douglas', '1952-03-11');
+insert into author (id, surname, name, date_of_birth) values (2, 'Adams', 'Douglas', '1962-03-11');
 insert into author (id, surname, name, date_of_birth) values (3, 'Frammingham', 'Eamon', '1978-11-18');
-insert into author (id, surname, name, date_of_birth) values (4, 'Berrygun', 'Adelbert', '1958-02-27');
-insert into author (id, surname, name, date_of_birth) values (5, 'Dyne', 'Jackie', '1947-06-20');
+insert into author (id, surname, name, date_of_birth) values (4, 'Berrygun', 'Adelbert', '1968-02-27');
+insert into author (id, surname, name, date_of_birth) values (5, 'Dyne', 'Jackie', '1967-06-20');
 insert into author (id, surname, name, date_of_birth) values (6, 'Braybrooks', 'Akim', '1973-07-05');
-insert into author (id, surname, name, date_of_birth) values (7, 'Williamson', 'Edy', '1920-03-09');
+insert into author (id, surname, name, date_of_birth) values (7, 'Williamson', 'Edy', '1960-03-09');
 insert into author (id, surname, name, date_of_birth) values (8, 'Aitchison', 'Adore', '1960-06-12');
-insert into author (id, surname, name, date_of_birth) values (9, 'Heining', 'Lian', '1955-03-22');
+insert into author (id, surname, name, date_of_birth) values (9, 'Heining', 'Lian', '1965-03-22');
 insert into author (id, surname, name, date_of_birth) values (10, 'Bruggeman', 'Ash', '1972-09-03');
 COMMIT;
