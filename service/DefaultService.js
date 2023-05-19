@@ -417,8 +417,33 @@ exports.editorsNameGET = function(url,db,name) {
  * name String Name of the editor
  * returns List
  **/
-// TODO
 exports.editorsNameCollectionsGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT c.name
+            FROM editor e, collection c, links l
+            WHERE
+                e.name='${name}' AND
+                e.id = l.editor AND
+                c.id = l.collection
+            ORDER BY c.name`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.name}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
+    });
 }
 
 /**
