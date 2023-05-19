@@ -529,8 +529,30 @@ exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collectio
  * name String Name of the editor
  * returns List
  **/
-// TODO
 exports.editorsNameEditionsGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT en.title, en.isbn, en.year
+            FROM editor er, edition en, links l
+            WHERE
+                er.name='${name}' AND
+                er.id = l.editor AND
+                en.id = l.edition
+            ORDER BY en.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'error':err})
+                return
+            } 
+            rows.forEach(row => {
+                row['link'] = {
+                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
+    });
 }
 
 /**
@@ -540,8 +562,27 @@ exports.editorsNameEditionsGET = function(url,db,name) {
  * isbn String ISBN of the published book
  * returns edition
  **/
-// TODO
 exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM 
+                edition e
+            WHERE
+                e.isbn='${isbn}'
+            ORDER BY e.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                console.log(sql_req, err)
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            resolve(rows[0]);
+        })
+    });
 }
 
 /**
