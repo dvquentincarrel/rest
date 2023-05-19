@@ -388,16 +388,26 @@ exports.editorsGET = function(url,db) {
  * name String Name of the editor
  * returns editor
  **/
-// TODO
 exports.editorsNameGET = function(url,db,name) {
     return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
+        let sql_req = `
+            SELECT name
+            FROM editor e
+            WHERE e.name='${name}'`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            rows[0]['links'] = [
+                { 'href':`${url}/collections`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
+            ]
+            resolve(rows[0]);
+        })
     });
 }
 
@@ -409,15 +419,6 @@ exports.editorsNameGET = function(url,db,name) {
  **/
 // TODO
 exports.editorsNameCollectionsGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ "", "" ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
 }
 
 /**
@@ -428,28 +429,6 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
  **/
 // TODO
 exports.editorsNameCollectionsCollectionGET = function(name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "links" : [ {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-  }, {
-    "year" : 0,
-    "isbn" : "isbn",
-    "title" : "title"
-  } ],
-  "collection" : {
-    "name" : "name"
-  }
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 /**
@@ -462,19 +441,6 @@ exports.editorsNameCollectionsCollectionGET = function(name) {
  **/
 // TODO
 exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collection,isbn) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "year" : 0,
-            "isbn" : "isbn",
-            "title" : "title"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
 }
 
 /**
@@ -485,23 +451,6 @@ exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collectio
  **/
 // TODO
 exports.editorsNameEditionsGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ {
-            "year" : 0,
-            "isbn" : "isbn",
-            "title" : "title"
-        }, {
-            "year" : 0,
-            "isbn" : "isbn",
-            "title" : "title"
-        } ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
 }
 
 /**
@@ -513,19 +462,6 @@ exports.editorsNameEditionsGET = function(url,db,name) {
  **/
 // TODO
 exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = {
-            "year" : 0,
-            "isbn" : "isbn",
-            "title" : "title"
-        };
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
 }
 
 /**
