@@ -1,6 +1,5 @@
 'use strict';
 
-
 /**
  * List of authors
  *
@@ -21,6 +20,73 @@ exports.authorsGET = function(url,db) {
     });
 }
 
+/**
+ * Informations about an author
+ *
+ * name String Name of the author
+ * returns author
+ **/
+exports.authorsNameGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT name, surname, date_of_birth
+            FROM author a
+            WHERE
+                a.name='${name}'
+        `
+        db.all(sql_req, (err, rows) => {
+            console.log(rows)
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
+                return
+            } 
+            rows[0]['links'] = [
+                { 'href':`${url}/decades`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/pieces`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
+            ]
+            resolve(rows[0]);
+        })
+    });
+}
+
+/**
+ * Decades in which the author wrote pieces
+ *
+ * name String Name of the author
+ * returns List
+ **/
+exports.authorsNameDecadesGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT d.range
+            FROM decade d, author a, links l
+            WHERE
+                d.id = l.decade AND
+                a.id = l.author AND
+                a.name='${name}'
+            ORDER BY d.range`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                resolve({'ERROR':'404, nothing found'})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.range}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
+    });
+}
 
 /**
  * Information about the decade and genres of works written in this decade
@@ -63,7 +129,6 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
         })
     });
 }
-
 
 /**
  * Informations about the genre and pieces of that genre
@@ -111,7 +176,6 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
     });
 }
 
-
 /**
  * Information about the piece and its editions
  *
@@ -158,7 +222,6 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
     });
 }
 
-
 /**
  * Information about the chosen edition
  *
@@ -185,130 +248,6 @@ exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(name,decade,genre,p
     }
   });
 }
-
-
-/**
- * Decades in which the author wrote pieces
- *
- * name String Name of the author
- * returns List
- **/
-exports.authorsNameDecadesGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        let sql_req = `
-            SELECT DISTINCT d.range
-            FROM decade d, author a, links l
-            WHERE
-                d.id = l.decade AND
-                a.id = l.author AND
-                a.name='${name}'
-            ORDER BY d.range`
-        db.all(sql_req, (err, rows) => {
-            if(err){
-                resolve({'ERROR':err})
-                return
-            } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
-                return
-            } 
-            rows.forEach(row => {
-                row['links'] = {
-                    'href':`${url}/${row.range}`.replaceAll('//','/'),
-                    'method':'GET',
-                }
-            })
-            resolve(rows);
-        })
-    });
-}
-
-
-/**
- * Published pieces by the author
- *
- * name String Name of the author
- * returns List
- **/
-// TODO
-exports.authorsNameEditionsGET = function(url,db,name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-}, {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
-
-/**
- * Information about the chosen edition
- *
- * name String Name of the author
- * isbn String ISBN of the published book
- * returns edition
- **/
-// TODO
-exports.authorsNameEditionsIsbnGET = function(name,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
-
-/**
- * Informations about an author
- *
- * name String Name of the author
- * returns author
- **/
-exports.authorsNameGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        let sql_req = `
-            SELECT name, surname, date_of_birth
-            FROM author a
-            WHERE
-                a.name='${name}'
-        `
-        db.all(sql_req, (err, rows) => {
-            console.log(rows)
-            if(err){
-                resolve({'ERROR':err})
-                return
-            } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
-                return
-            } 
-            rows[0]['links'] = [
-                { 'href':`${url}/decades`.replaceAll('//','/'), 'method':'GET'},
-                { 'href':`${url}/pieces`.replaceAll('//','/'), 'method':'GET'},
-                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
-            ]
-            resolve(rows[0]);
-        })
-    });
-}
-
 
 /**
  * Pieces written by that author
@@ -349,6 +288,56 @@ exports.authorsNamePiecesGET = function(url,db,name) {
     });
 }
 
+/**
+ * Published pieces by the author
+ *
+ * name String Name of the author
+ * returns List
+ **/
+// TODO
+exports.authorsNameEditionsGET = function(url,db,name) {
+  return new Promise(function(resolve, reject) {
+    var examples = {};
+    examples['application/json'] = [ {
+  "year" : 0,
+  "isbn" : "isbn",
+  "title" : "title"
+}, {
+  "year" : 0,
+  "isbn" : "isbn",
+  "title" : "title"
+} ];
+    if (Object.keys(examples).length > 0) {
+      resolve(examples[Object.keys(examples)[0]]);
+    } else {
+      resolve();
+    }
+  });
+}
+
+/**
+ * Information about the chosen edition
+ *
+ * name String Name of the author
+ * isbn String ISBN of the published book
+ * returns edition
+ **/
+// TODO
+exports.authorsNameEditionsIsbnGET = function(name,isbn) {
+  return new Promise(function(resolve, reject) {
+    var examples = {};
+    examples['application/json'] = {
+  "year" : 0,
+  "isbn" : "isbn",
+  "title" : "title"
+};
+    if (Object.keys(examples).length > 0) {
+      resolve(examples[Object.keys(examples)[0]]);
+    } else {
+      resolve();
+    }
+  });
+}
 
 /**
  * List of editors
@@ -372,6 +361,43 @@ exports.editorsGET = function() {
   });
 }
 
+/**
+ * Information about the editor
+ *
+ * name String Name of the editor
+ * returns editor
+ **/
+// TODO
+exports.editorsNameGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = "";
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+}
+
+/**
+ * List of collections by that editor
+ *
+ * name String Name of the editor
+ * returns List
+ **/
+// TODO
+exports.editorsNameCollectionsGET = function(url,db,name) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = [ "", "" ];
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+}
 
 /**
  * Information about that collection and its edition
@@ -405,7 +431,6 @@ exports.editorsNameCollectionsCollectionGET = function(name) {
   });
 }
 
-
 /**
  * Information about that published piece
  *
@@ -430,27 +455,6 @@ exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collectio
         }
     });
 }
-
-
-/**
- * List of collections by that editor
- *
- * name String Name of the editor
- * returns List
- **/
-// TODO
-exports.editorsNameCollectionsGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = [ "", "" ];
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
-}
-
 
 /**
  * List of published pieces by that editor
@@ -479,7 +483,6 @@ exports.editorsNameEditionsGET = function(url,db,name) {
     });
 }
 
-
 /**
  * Information about that published piece
  *
@@ -504,27 +507,6 @@ exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
     });
 }
 
-
-/**
- * Information about the editor
- *
- * name String Name of the editor
- * returns editor
- **/
-// TODO
-exports.editorsNameGET = function(url,db,name) {
-    return new Promise(function(resolve, reject) {
-        var examples = {};
-        examples['application/json'] = "";
-        if (Object.keys(examples).length > 0) {
-            resolve(examples[Object.keys(examples)[0]]);
-        } else {
-            resolve();
-        }
-    });
-}
-
-
 /**
  * Entry points
  *
@@ -546,12 +528,12 @@ exports.rootGET = function(url,db) {
  *
  * no response value expected for this operation
  **/
+// TODO
 exports.authorsDELETE = function() {
   return new Promise(function(resolve, reject) {
     resolve();
   });
 }
-
 
 /**
  * Add/Update an author
@@ -559,12 +541,12 @@ exports.authorsDELETE = function() {
  * body Author  (optional)
  * no response value expected for this operation
  **/
+// TODO
 exports.authorsPOST = function(body) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
 }
-
 
 /**
  * Add/Overwrite an author
@@ -572,10 +554,9 @@ exports.authorsPOST = function(body) {
  * body Author  (optional)
  * no response value expected for this operation
  **/
+// TODO
 exports.authorsPUT = function(body) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
 }
-
-
