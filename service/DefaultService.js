@@ -35,7 +35,6 @@ exports.authorsNameGET = function(url,db,name) {
                 a.name='${name}'
         `
         db.all(sql_req, (err, rows) => {
-            console.log(rows)
             if(err){
                 reject({'ERROR':err})
                 return
@@ -241,21 +240,27 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
  * isbn String ISBN of the published book
  * returns edition
  **/
-// TODO
-exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(name,decade,genre,piece,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(url,db,name,decade,genre,piece,isbn) {
+    piece = piece.replaceAll('%20',' ');
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM 
+                edition e
+            WHERE
+                e.isbn='${isbn}'
+            ORDER BY e.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            resolve(rows[0]);
+        })
+    });
 }
 
 /**
@@ -303,25 +308,24 @@ exports.authorsNamePiecesGET = function(url,db,name) {
  * name String Name of the author
  * returns List
  **/
-// TODO
 exports.authorsNameEditionsGET = function(url,db,name) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-}, {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM author a, edition e, links l
+            WHERE
+                a.name='${name}' AND
+                a.id = l.author AND
+                e.id = l.edition
+            ORDER BY e.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'error':err})
+                return
+            } 
+            resolve(rows);
+        })
+    });
 }
 
 /**
