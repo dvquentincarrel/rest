@@ -12,29 +12,29 @@ CREATE TABLE decade (
 
 CREATE TABLE genre (
     id integer PRIMARY KEY,
-    name string
+    name text
 );
 
 CREATE TABLE piece (
     id integer PRIMARY KEY,
-    title string
+    title text
 );
 
 CREATE TABLE editor (
     id integer PRIMARY KEY,
-    name string
+    name text
 );
 
 CREATE TABLE collection (
     id integer PRIMARY KEY,
-    name string
+    name text
 );
 
 CREATE TABLE edition (
     id integer PRIMARY KEY,
-    title string,
+    title text,
     year integer,
-    isbn string
+    isbn text
 );
 
 --CREATE TABLE author_decade (
