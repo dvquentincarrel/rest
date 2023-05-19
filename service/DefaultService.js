@@ -37,10 +37,10 @@ exports.authorsNameGET = function(url,db,name) {
         db.all(sql_req, (err, rows) => {
             console.log(rows)
             if(err){
-                resolve({'ERROR':err})
+                reject({'ERROR':err})
                 return
             } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
+                reject({'ERROR':'404, nothing found'})
                 return
             } 
             rows[0]['links'] = [
@@ -71,10 +71,10 @@ exports.authorsNameDecadesGET = function(url,db,name) {
             ORDER BY d.range`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'ERROR':err})
+                reject({'ERROR':err})
                 return
             } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
+                reject({'ERROR':'404, nothing found'})
                 return
             } 
             rows.forEach(row => {
@@ -109,10 +109,10 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
             ORDER BY g.name`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'ERROR':err})
+                reject({'ERROR':err})
                 return
             } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
+                reject({'ERROR':'404, nothing found'})
                 return
             }
             rows.forEach(row => {
@@ -159,10 +159,10 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
             ORDER BY p.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'ERROR':err})
+                reject({'ERROR':err})
                 return
             } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
+                reject({'ERROR':'404, nothing found'})
                 return
             } 
             rows.forEach(row => {
