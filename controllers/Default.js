@@ -125,8 +125,8 @@ module.exports.editorsNameCollectionsCollectionIsbnGET = function editorsNameCol
     });
 };
 
-module.exports.editorsNameCollectionsCollectionGET = function editorsNameCollectionsCollectionGET (req, res, next, name) {
-  Default.editorsNameCollectionsCollectionGET(`${req['rawHeaders'][1]}/${req.url}`,db,name)
+module.exports.editorsNameCollectionsCollectionGET = function editorsNameCollectionsCollectionGET (req, res, next, name, collection) {
+  Default.editorsNameCollectionsCollectionGET(`${req['rawHeaders'][1]}/${req.url}`,db,name, collection)
     .then(function (response) {
       utils.writeJson(res, response);
     })

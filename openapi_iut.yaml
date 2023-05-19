@@ -436,6 +436,12 @@ paths:
             in: path
             required: true
             description: Name of the editor
+          - name: collection
+            schema:
+              type: string
+            in: path
+            required: true
+            description: Name of the collection
       responses:
         '200':
           description: OK

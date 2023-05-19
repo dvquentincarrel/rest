@@ -458,6 +458,14 @@ paths:
         explode: false
         schema:
           type: string
+      - name: collection
+        in: path
+        description: Name of the collection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
         "200":
           description: OK
