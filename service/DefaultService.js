@@ -453,7 +453,7 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
  * returns inline_response_200_3
  **/
 // TODO
-exports.editorsNameCollectionsCollectionGET = function(name) {
+exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
 }
 
 /**
@@ -511,7 +511,7 @@ exports.rootGET = function(url,db) {
  * no response value expected for this operation
  **/
 // TODO
-exports.authorsDELETE = function() {
+exports.authorsDELETE = function(url,db,) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
@@ -524,7 +524,7 @@ exports.authorsDELETE = function() {
  * no response value expected for this operation
  **/
 // TODO
-exports.authorsPOST = function(body) {
+exports.authorsPOST = function(url,db,body) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
@@ -537,7 +537,7 @@ exports.authorsPOST = function(body) {
  * no response value expected for this operation
  **/
 // TODO
-exports.authorsPUT = function(body) {
+exports.authorsPUT = function(url,db,body) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
