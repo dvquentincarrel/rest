@@ -500,8 +500,27 @@ exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
  * isbn String ISBN of the published book
  * returns edition
  **/
-// TODO
 exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collection,isbn) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM 
+                edition e
+            WHERE
+                e.isbn='${isbn}'
+            ORDER BY e.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                console.log(sql_req, err)
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            resolve(rows[0]);
+        })
+    });
 }
 
 /**
