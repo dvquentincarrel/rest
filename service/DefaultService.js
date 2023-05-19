@@ -323,6 +323,12 @@ exports.authorsNameEditionsGET = function(url,db,name) {
                 resolve({'error':err})
                 return
             } 
+            rows.forEach(row => {
+                row['link'] = {
+                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
             resolve(rows);
         })
     });
@@ -335,21 +341,25 @@ exports.authorsNameEditionsGET = function(url,db,name) {
  * isbn String ISBN of the published book
  * returns edition
  **/
-// TODO
-exports.authorsNameEditionsIsbnGET = function(name,isbn) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "year" : 0,
-  "isbn" : "isbn",
-  "title" : "title"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT e.title, e.isbn, e.year
+            FROM author a, edition e, links l
+            WHERE
+                a.name='${name}' AND
+                e.isbn='${isbn}' AND
+                a.id = l.author AND
+                e.id = l.edition
+            ORDER BY e.title`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                resolve({'error':err})
+                return
+            } 
+            resolve(rows[0]);
+        })
+    });
 }
 
 /**
