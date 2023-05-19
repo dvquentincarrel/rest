@@ -367,21 +367,19 @@ exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
  *
  * returns List
  **/
-// TODO
-exports.editorsGET = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "name" : "name"
-}, {
-  "name" : "name"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
+exports.editorsGET = function(url,db) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `SELECT name FROM editor`
+        db.all(sql_req, (err, rows) => {
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.name}`.replaceAll('//','/').replaceAll(' ', '%20'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows)
+        })
+    });
 }
 
 /**
