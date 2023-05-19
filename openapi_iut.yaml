@@ -210,7 +210,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  decade:
+                  genre:
                     $ref: '#/components/schemas/genre'
                   links:
                     type: array
@@ -254,7 +254,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  decade:
+                  piece:
                     $ref: '#/components/schemas/piece'
                   links:
                     type: array
