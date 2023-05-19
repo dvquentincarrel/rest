@@ -1,40 +1,40 @@
 CREATE TABLE author (
     id integer PRIMARY KEY,
-    name text,
+    name text UNIQUE,
     surname text,
     date_of_birth text
 );
 
 CREATE TABLE decade (
     id integer PRIMARY KEY,
-    range text
+    range text UNIQUE
 );
 
 CREATE TABLE genre (
     id integer PRIMARY KEY,
-    name text
+    name text UNIQUE
 );
 
 CREATE TABLE piece (
     id integer PRIMARY KEY,
-    title text
+    title text UNIQUE
 );
 
 CREATE TABLE editor (
     id integer PRIMARY KEY,
-    name text
+    name text UNIQUE
 );
 
 CREATE TABLE collection (
     id integer PRIMARY KEY,
-    name text
+    name text UNIQUE
 );
 
 CREATE TABLE edition (
     id integer PRIMARY KEY,
     title text,
     year integer,
-    isbn text
+    isbn text UNIQUE
 );
 
 --CREATE TABLE author_decade (
