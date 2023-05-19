@@ -6,6 +6,8 @@ info:
   contact:
     email: quentin.carrel@etu.univ-grenoble-alpes.fr
     name: Bonacorsi Camille, Carrel Quentin, Delon Loïc, Galleron Evan
+servers:
+  - url: http://localhost:8080
 
 components:
   schemas:
@@ -101,13 +103,6 @@ paths:
           description: OK
         '400':
           description: Malformed request
-    delete:
-      summary: Deletes an author
-      responses:
-        '200':
-          description: OK
-        '404':
-          description: Author didn't exist
   /authors/{name}:
     get:
       summary: Informations about an author
@@ -127,6 +122,20 @@ paths:
                 $ref: '#/components/schemas/author'
         '400':
           description: No author found
+    delete:
+      summary: Deletes an author
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Name of the author
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Author didn't exist
   /authors/{name}/decades:
     get:
       summary: Decades in which the author wrote pieces

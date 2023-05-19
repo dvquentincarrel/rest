@@ -185,8 +185,8 @@ module.exports.rootGET = function rootGET (req, res, next) {
     });
 };
 
-module.exports.authorsDELETE = function authorsDELETE (req, res, next) {
-  Default.authorsDELETE()
+module.exports.authorsNameDELETE = function authorsDELETE (req, res, next, name) {
+  Default.authorsNameDELETE(db, name)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -196,7 +196,7 @@ module.exports.authorsDELETE = function authorsDELETE (req, res, next) {
 };
 
 module.exports.authorsPUT = function authorsPUT (req, res, next, body) {
-  Default.authorsPUT(body)
+  Default.authorsPUT(db, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -206,7 +206,7 @@ module.exports.authorsPUT = function authorsPUT (req, res, next, body) {
 };
 
 module.exports.authorsPOST = function authorsPOST (req, res, next, body) {
-  Default.authorsPOST(body)
+  Default.authorsPOST(db, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

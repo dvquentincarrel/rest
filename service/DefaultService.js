@@ -607,7 +607,7 @@ exports.rootGET = function(url,db) {
  * no response value expected for this operation
  **/
 // TODO
-exports.authorsDELETE = function(url,db,) {
+exports.authorsNameDELETE = function(db,name) {
   return new Promise(function(resolve, reject) {
     resolve();
   });
@@ -619,11 +619,45 @@ exports.authorsDELETE = function(url,db,) {
  * body Author  (optional)
  * no response value expected for this operation
  **/
-// TODO
-exports.authorsPOST = function(url,db,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+exports.authorsPOST = function(db,body) {
+    return new Promise(function(resolve, reject) {
+        console.log(body)
+        db.all('SELECT * FROM author WHERE name = ?', [body.name], (err, rows) => {
+            console.log(rows)
+            if(err){
+                console.log(err);
+                reject({'ERROR':err});
+                return;
+            } else if (rows.length) {
+                console.log('update')
+                let sql_req = "UPDATE author SET surname = ?, date_of_birth = ? WHERE name = ? ";
+                let params = [body.surname, body.date_of_birth, body.name];
+                db.get(sql_req, params, (err, rows) => {
+                    if(err){
+                        console.log(err);
+                        reject({'ERROR':err});
+                        return;
+                    }
+                    resolve();
+                    return;
+                })
+            } else {
+                console.log('insert')
+                let id = Math.floor(Math.random()*10000);
+                let sql_req = "INSERT INTO author (id, name, surname, date_of_birth) VALUES (?, ?, ?, ?)";
+                let params = [id, body.name, body.surname, body.date_of_birth];
+                db.get(sql_req, params, (err, rows) => {
+                    if(err){
+                        console.log(err);
+                        reject({'ERROR':err});
+                        return;
+                    }
+                    resolve();
+                    return;
+                })
+            }
+        })
+    });
 }
 
 /**
@@ -632,9 +666,43 @@ exports.authorsPOST = function(url,db,body) {
  * body Author  (optional)
  * no response value expected for this operation
  **/
-// TODO
-exports.authorsPUT = function(url,db,body) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+exports.authorsPUT = function(db,body) {
+    return new Promise(function(resolve, reject) {
+        console.log(body)
+        db.all('SELECT * FROM author WHERE name = ?', [body.name], (err, rows) => {
+            console.log(rows)
+            if(err){
+                console.log(err);
+                reject({'ERROR':err});
+                return;
+            } else if (rows.length) {
+                console.log('update')
+                let sql_req = "UPDATE author SET surname = ?, date_of_birth = ? WHERE name = ? ";
+                let params = [body.surname, body.date_of_birth, body.name];
+                db.get(sql_req, params, (err, rows) => {
+                    if(err){
+                        console.log(err);
+                        reject({'ERROR':err});
+                        return;
+                    }
+                    resolve();
+                    return;
+                })
+            } else {
+                console.log('insert')
+                let id = Math.floor(Math.random()*10000);
+                let sql_req = "INSERT INTO author (id, name, surname, date_of_birth) VALUES (?, ?, ?, ?)";
+                let params = [id, body.name, body.surname, body.date_of_birth];
+                db.get(sql_req, params, (err, rows) => {
+                    if(err){
+                        console.log(err);
+                        reject({'ERROR':err});
+                        return;
+                    }
+                    resolve();
+                    return;
+                })
+            }
+        })
+    });
 }
