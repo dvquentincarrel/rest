@@ -36,6 +36,7 @@ exports.authorsNameGET = function(url,db,name) {
         `
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -70,6 +71,7 @@ exports.authorsNameDecadesGET = function(url,db,name) {
             ORDER BY d.range`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -108,6 +110,7 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
             ORDER BY g.name`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -158,6 +161,7 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
             ORDER BY p.title`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -209,6 +213,7 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
             ORDER BY p.title`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -252,6 +257,7 @@ exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(url,db,name,decade,
             ORDER BY e.title`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -396,6 +402,7 @@ exports.editorsNameGET = function(url,db,name) {
             WHERE e.name='${name}'`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -429,6 +436,7 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
             ORDER BY c.name`
         db.all(sql_req, (err, rows) => {
             if(err){
+                console.log(sql_req, err)
                 reject({'ERROR':err})
                 return
             } else if (!rows.length) {
@@ -452,8 +460,36 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
  * name String Name of the editor
  * returns inline_response_200_3
  **/
-// TODO
 exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
+    return new Promise(function(resolve, reject) {
+        let sql_req = `
+            SELECT DISTINCT en.title, en.isbn, en.year
+            FROM editor er, edition en, collection c, links l
+            WHERE
+                er.name='${name}' AND
+                c.name='${collection}' AND
+                er.id = l.editor AND
+                c.id = l.collection AND
+                en.id = l.edition
+            ORDER BY c.name`
+        db.all(sql_req, (err, rows) => {
+            if(err){
+                console.log(sql_req, err)
+                reject({'ERROR':err})
+                return
+            } else if (!rows.length) {
+                reject({'ERROR':'404, nothing found'})
+                return
+            } 
+            rows.forEach(row => {
+                row['links'] = {
+                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
+            resolve(rows);
+        })
+    });
 }
 
 /**
