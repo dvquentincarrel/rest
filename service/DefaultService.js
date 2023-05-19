@@ -185,7 +185,6 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
  * piece String Name of the piece
  * returns inline_response_200_2
  **/
-// TODO
 exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genre,piece) {
     piece = piece.replaceAll('%20',' ');
     return new Promise(function(resolve, reject) {
@@ -211,13 +210,23 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
             ORDER BY p.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'ERROR':err})
+                reject({'ERROR':err})
                 return
             } else if (!rows.length) {
-                resolve({'ERROR':'404, nothing found'})
+                reject({'ERROR':'404, nothing found'})
                 return
             } 
-            resolve(rows);
+            rows.forEach(row => {
+                row['link'] = {
+                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'method':'GET',
+                }
+            })
+            let content = {
+                'title': piece,
+                'editions': rows
+            }
+            resolve(content);
         })
     });
 }
