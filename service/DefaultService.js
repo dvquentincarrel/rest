@@ -11,7 +11,8 @@ exports.authorsGET = function(url,db) {
         db.all(sql_req, (err, rows) => {
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replaceAll('//','/'),
+                    // replaceAll didn't actually replace *all*
+                    'href':`${url}/${row.name}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -44,9 +45,9 @@ exports.authorsNameGET = function(url,db,name) {
                 return
             } 
             rows[0]['links'] = [
-                { 'href':`${url}/decades`.replaceAll('//','/'), 'method':'GET'},
-                { 'href':`${url}/pieces`.replaceAll('//','/'), 'method':'GET'},
-                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/decades`.replace(/\/+/g,'/'), 'method':'GET'},
+                { 'href':`${url}/pieces`.replace(/\/+/g,'/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replace(/\/+/g,'/'), 'method':'GET'},
             ]
             resolve(rows[0]);
         })
@@ -80,7 +81,7 @@ exports.authorsNameDecadesGET = function(url,db,name) {
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.range}`.replaceAll('//','/'),
+                    'href':`${url}/${row.range}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -119,7 +120,7 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
             }
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replaceAll('//','/'),
+                    'href':`${url}/${row.name}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -170,7 +171,7 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.title}`.replaceAll('//','/').replaceAll(' ','%20'),
+                    'href':`${url}/${row.title}`.replace(/\/+/g,'/').replaceAll(' ','%20'),
                     'method':'GET',
                 }
             })
@@ -222,7 +223,7 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
             } 
             rows.forEach(row => {
                 row['link'] = {
-                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'href':`${url}/${row.isbn}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -297,7 +298,7 @@ exports.authorsNamePiecesGET = function(url,db,name) {
                 urlArr.pop()
                 let newUrl = urlArr.join('/')
                 row['links'] = {
-                'href':`${newUrl}/decades/${row.range}/${row.name}/${row.title}`.replaceAll('//','/').replaceAll(' ','%20'),
+                'href':`${newUrl}/decades/${row.range}/${row.name}/${row.title}`.replace(/\/+/g,'/').replaceAll(' ','%20'),
                 'method':'get'
                 }
                 delete row['range']
@@ -331,7 +332,7 @@ exports.authorsNameEditionsGET = function(url,db,name) {
             } 
             rows.forEach(row => {
                 row['link'] = {
-                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'href':`${url}/${row.isbn}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -379,7 +380,7 @@ exports.editorsGET = function(url,db) {
         db.all(sql_req, (err, rows) => {
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replaceAll('//','/').replaceAll(' ', '%20'),
+                    'href':`${url}/${row.name}`.replace(/\/+/g,'/').replaceAll(' ', '%20'),
                     'method':'GET',
                 }
             })
@@ -410,8 +411,8 @@ exports.editorsNameGET = function(url,db,name) {
                 return
             } 
             rows[0]['links'] = [
-                { 'href':`${url}/collections`.replaceAll('//','/'), 'method':'GET'},
-                { 'href':`${url}/editions`.replaceAll('//','/'), 'method':'GET'},
+                { 'href':`${url}/collections`.replace(/\/+/g,'/'), 'method':'GET'},
+                { 'href':`${url}/editions`.replace(/\/+/g,'/'), 'method':'GET'},
             ]
             resolve(rows[0]);
         })
@@ -445,7 +446,7 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.name}`.replaceAll('//','/'),
+                    'href':`${url}/${row.name}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -483,7 +484,7 @@ exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
             } 
             rows.forEach(row => {
                 row['links'] = {
-                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'href':`${url}/${row.isbn}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -546,7 +547,7 @@ exports.editorsNameEditionsGET = function(url,db,name) {
             } 
             rows.forEach(row => {
                 row['link'] = {
-                    'href':`${url}/${row.isbn}`.replaceAll('//','/'),
+                    'href':`${url}/${row.isbn}`.replace(/\/+/g,'/'),
                     'method':'GET',
                 }
             })
@@ -594,8 +595,8 @@ exports.rootGET = function(url,db) {
     return new Promise(function(resolve, reject) {
         resolve({'links':
             [
-                {'href':'/authors','method':'GET'},
-                {'href':'/editors','method':'GET'}
+                {'href':`${url}/authors`.replace(/\/+/g,'/'),'method':'GET'},
+                {'href':`${url}/editors`.replace(/\/+/g,'/'),'method':'GET'}
             ]
         });
     });
@@ -604,13 +605,32 @@ exports.rootGET = function(url,db) {
 /**
  * Deletes an author
  *
+ * name String Name of the author
  * no response value expected for this operation
  **/
-// TODO
 exports.authorsNameDELETE = function(db,name) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
+    return new Promise(function(resolve, reject) {
+        db.all("SELECT * FROM author WHERE name = ?", [name], (err, rows) => {
+            if(err) {
+                console.log(err);
+                reject({'ERROR':err});
+                return;
+            } else if (rows.length) {
+                let sql_req = "DELETE FROM author WHERE name = ?";
+                db.get(sql_req, [name], (err, rows) => {
+                    if(err){
+                        console.log(err);
+                        reject({'ERROR':err});
+                        return;
+                    }
+                    resolve();
+                    return;
+                })
+            } else {
+                reject()
+            }
+        })
+    })
 }
 
 /**
@@ -621,9 +641,7 @@ exports.authorsNameDELETE = function(db,name) {
  **/
 exports.authorsPOST = function(db,body) {
     return new Promise(function(resolve, reject) {
-        console.log(body)
         db.all('SELECT * FROM author WHERE name = ?', [body.name], (err, rows) => {
-            console.log(rows)
             if(err){
                 console.log(err);
                 reject({'ERROR':err});
@@ -668,7 +686,6 @@ exports.authorsPOST = function(db,body) {
  **/
 exports.authorsPUT = function(db,body) {
     return new Promise(function(resolve, reject) {
-        console.log(body)
         db.all('SELECT * FROM author WHERE name = ?', [body.name], (err, rows) => {
             console.log(rows)
             if(err){

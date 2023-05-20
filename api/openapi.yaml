@@ -7,7 +7,7 @@ info:
     email: quentin.carrel@etu.univ-grenoble-alpes.fr
   version: 1.0.0
 servers:
-- url: /
+- url: http://localhost:8080
 paths:
   /:
     get:
@@ -66,15 +66,6 @@ paths:
         "400":
           description: Malformed request
       x-swagger-router-controller: Default
-    delete:
-      summary: Deletes an author
-      operationId: authorsDELETE
-      responses:
-        "200":
-          description: OK
-        "404":
-          description: Author didn't exist
-      x-swagger-router-controller: Default
   /authors/{name}:
     get:
       summary: Informations about an author
@@ -97,6 +88,24 @@ paths:
                 $ref: '#/components/schemas/author'
         "400":
           description: No author found
+      x-swagger-router-controller: Default
+    delete:
+      summary: Deletes an author
+      operationId: authorsNameDELETE
+      parameters:
+      - name: name
+        in: path
+        description: Name of the author
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Author didn't exist
       x-swagger-router-controller: Default
   /authors/{name}/decades:
     get:

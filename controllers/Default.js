@@ -185,7 +185,7 @@ module.exports.rootGET = function rootGET (req, res, next) {
     });
 };
 
-module.exports.authorsNameDELETE = function authorsDELETE (req, res, next, name) {
+module.exports.authorsNameDELETE = function authorsNameDELETE (req, res, next, name) {
   Default.authorsNameDELETE(db, name)
     .then(function (response) {
       utils.writeJson(res, response);
