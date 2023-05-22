@@ -13,7 +13,7 @@ exports.authorsGET = function(url,db) {
                 row['links'] = {
                     // replaceAll didn't actually replace *all*
                     'href':`${url}/${row.name}`.replace(/\/+/g,'/'),
-                    'method':'GET',
+                    'method':'GET, DELETE',
                 }
             })
             resolve(rows)
@@ -595,7 +595,7 @@ exports.rootGET = function(url,db) {
     return new Promise(function(resolve, reject) {
         resolve({'links':
             [
-                {'href':`${url}/authors`.replace(/\/+/g,'/'),'method':'GET'},
+                {'href':`${url}/authors`.replace(/\/+/g,'/'),'method':'GET, POST, PUT'},
                 {'href':`${url}/editors`.replace(/\/+/g,'/'),'method':'GET'}
             ]
         });
