@@ -16,7 +16,7 @@ exports.authorsGET = function(url,db) {
                     'method':'GET, DELETE',
                 }
             })
-            resolve(rows)
+            resolve([rows,200])
         })
     });
 }
@@ -38,10 +38,10 @@ exports.authorsNameGET = function(url,db,name) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows[0]['links'] = [
@@ -49,7 +49,7 @@ exports.authorsNameGET = function(url,db,name) {
                 { 'href':`${url}/pieces`.replace(/\/+/g,'/'), 'method':'GET'},
                 { 'href':`${url}/editions`.replace(/\/+/g,'/'), 'method':'GET'},
             ]
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -73,10 +73,10 @@ exports.authorsNameDecadesGET = function(url,db,name) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows.forEach(row => {
@@ -85,7 +85,7 @@ exports.authorsNameDecadesGET = function(url,db,name) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -112,10 +112,10 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             }
             rows.forEach(row => {
@@ -128,7 +128,7 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
                 'decade': decade,
                 'genres': rows
             }
-            resolve(content);
+            resolve([content,200]);
         })
     });
 }
@@ -163,10 +163,10 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows.forEach(row => {
@@ -175,7 +175,7 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -215,10 +215,10 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows.forEach(row => {
@@ -231,7 +231,7 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
                 'title': piece,
                 'editions': rows
             }
-            resolve(content);
+            resolve([content,200]);
         })
     });
 }
@@ -259,13 +259,13 @@ exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(url,db,name,decade,
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -290,7 +290,7 @@ exports.authorsNamePiecesGET = function(url,db,name) {
             ORDER BY p.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'error':err})
+                resolve([{'error':err},500])
                 return
             } 
             rows.forEach(row => {
@@ -304,7 +304,7 @@ exports.authorsNamePiecesGET = function(url,db,name) {
                 delete row['range']
                 delete row['name']
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -327,7 +327,7 @@ exports.authorsNameEditionsGET = function(url,db,name) {
             ORDER BY e.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'error':err})
+                resolve([{'error':err},500])
                 return
             } 
             rows.forEach(row => {
@@ -336,7 +336,7 @@ exports.authorsNameEditionsGET = function(url,db,name) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -361,10 +361,10 @@ exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
             ORDER BY e.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'error':err})
+                resolve([{'error':err},500])
                 return
             } 
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -384,7 +384,7 @@ exports.editorsGET = function(url,db) {
                     'method':'GET',
                 }
             })
-            resolve(rows)
+            resolve([rows,200])
         })
     });
 }
@@ -404,17 +404,17 @@ exports.editorsNameGET = function(url,db,name) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows[0]['links'] = [
                 { 'href':`${url}/collections`.replace(/\/+/g,'/'), 'method':'GET'},
                 { 'href':`${url}/editions`.replace(/\/+/g,'/'), 'method':'GET'},
             ]
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -438,10 +438,10 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows.forEach(row => {
@@ -450,7 +450,7 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -476,10 +476,10 @@ exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
             rows.forEach(row => {
@@ -488,7 +488,7 @@ exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -513,13 +513,13 @@ exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collectio
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -542,7 +542,7 @@ exports.editorsNameEditionsGET = function(url,db,name) {
             ORDER BY en.title`
         db.all(sql_req, (err, rows) => {
             if(err){
-                resolve({'error':err})
+                resolve([{'error':err},500])
                 return
             } 
             rows.forEach(row => {
@@ -551,7 +551,7 @@ exports.editorsNameEditionsGET = function(url,db,name) {
                     'method':'GET',
                 }
             })
-            resolve(rows);
+            resolve([rows,200]);
         })
     });
 }
@@ -575,13 +575,13 @@ exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
         db.all(sql_req, (err, rows) => {
             if(err){
                 console.log(sql_req, err)
-                reject({'ERROR':err})
+                reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject({'ERROR':'404, nothing found'})
+                reject([{'ERROR':'404, nothing found'},404])
                 return
             } 
-            resolve(rows[0]);
+            resolve([rows[0],200]);
         })
     });
 }
@@ -593,12 +593,12 @@ exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
  **/
 exports.rootGET = function(url,db) {
     return new Promise(function(resolve, reject) {
-        resolve({'links':
+        resolve([{'links':
             [
                 {'href':`${url}/authors`.replace(/\/+/g,'/'),'method':'GET, POST, PUT'},
                 {'href':`${url}/editors`.replace(/\/+/g,'/'),'method':'GET'}
             ]
-        });
+        },200]);
     });
 }
 
@@ -613,21 +613,21 @@ exports.authorsNameDELETE = function(db,name) {
         db.all("SELECT * FROM author WHERE name = ?", [name], (err, rows) => {
             if(err) {
                 console.log(err);
-                reject({'ERROR':err});
+                reject([{'ERROR':err},500]);
                 return;
             } else if (rows.length) {
                 let sql_req = "DELETE FROM author WHERE name = ?";
                 db.get(sql_req, [name], (err, rows) => {
                     if(err){
                         console.log(err);
-                        reject({'ERROR':err});
+                        reject([{'ERROR':err},500]);
                         return;
                     }
-                    resolve();
+                    resolve([`Deleted ${name}`,200]);
                     return;
                 })
             } else {
-                reject()
+                reject(['Author not found',404])
             }
         })
     })
@@ -644,7 +644,7 @@ exports.authorsPOST = function(db,body) {
         db.all('SELECT * FROM author WHERE name = ?', [body.name], (err, rows) => {
             if(err){
                 console.log(err);
-                reject({'ERROR':err});
+                reject([{'ERROR':err},500]);
                 return;
             } else if (rows.length) {
                 console.log('update')
@@ -653,10 +653,10 @@ exports.authorsPOST = function(db,body) {
                 db.get(sql_req, params, (err, rows) => {
                     if(err){
                         console.log(err);
-                        reject({'ERROR':err});
+                        reject([{'ERROR':err},500]);
                         return;
                     }
-                    resolve();
+                    resolve(['Author updated',200]);
                     return;
                 })
             } else {
@@ -667,10 +667,10 @@ exports.authorsPOST = function(db,body) {
                 db.get(sql_req, params, (err, rows) => {
                     if(err){
                         console.log(err);
-                        reject({'ERROR':err});
+                        reject([{'ERROR':err},500]);
                         return;
                     }
-                    resolve();
+                    resolve(['Author added',200]);
                     return;
                 })
             }
@@ -690,7 +690,7 @@ exports.authorsPUT = function(db,body) {
             console.log(rows)
             if(err){
                 console.log(err);
-                reject({'ERROR':err});
+                reject([{'ERROR':err},500]);
                 return;
             } else if (rows.length) {
                 console.log('update')
@@ -699,10 +699,10 @@ exports.authorsPUT = function(db,body) {
                 db.get(sql_req, params, (err, rows) => {
                     if(err){
                         console.log(err);
-                        reject({'ERROR':err});
+                        reject([{'ERROR':err},500]);
                         return;
                     }
-                    resolve();
+                    resolve(['Author updated',200]);
                     return;
                 })
             } else {
@@ -713,10 +713,10 @@ exports.authorsPUT = function(db,body) {
                 db.get(sql_req, params, (err, rows) => {
                     if(err){
                         console.log(err);
-                        reject({'ERROR':err});
+                        reject([{'ERROR':err},500]);
                         return;
                     }
-                    resolve();
+                    resolve(['Author added',200]);
                     return;
                 })
             }
