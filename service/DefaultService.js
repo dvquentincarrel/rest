@@ -33,9 +33,8 @@ exports.authorsNameGET = function(url,db,name) {
             SELECT name, surname, date_of_birth
             FROM author a
             WHERE
-                a.name='${name}'
-        `
-        db.all(sql_req, (err, rows) => {
+                a.name = ?`
+        db.all(sql_req, [name],(err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -68,9 +67,9 @@ exports.authorsNameDecadesGET = function(url,db,name) {
             WHERE
                 d.id = l.decade AND
                 a.id = l.author AND
-                a.name='${name}'
+                a.name = ?
             ORDER BY d.range`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -103,13 +102,13 @@ exports.authorsNameDecadesDecadeGET = function(url,db,name,decade) {
             SELECT DISTINCT g.name
             FROM decade d, author a, links l, genre g
             WHERE
-                a.name='${name}' AND
-                d.range='${decade}' AND
+                a.name=? AND
+                d.range=? AND
                 d.id = l.decade AND
                 a.id = l.author AND
                 g.id = l.genre
             ORDER BY g.name`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name, decade], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -152,15 +151,15 @@ exports.authorsNameDecadesDecadeGenreGET = function(url,db,name,decade,genre) {
                 piece p,
                 links l
             WHERE
-                a.name='${name}' AND
-                d.range='${decade}' AND
-                g.name='${genre}' AND
+                a.name=? AND
+                d.range=? AND
+                g.name=? AND
                 d.id = l.decade AND
                 a.id = l.author AND
                 g.id = l.genre AND
                 p.id = l.piece
             ORDER BY p.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name, decade, genre], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -202,17 +201,17 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
                 edition e,
                 links l
             WHERE
-                a.name='${name}' AND
-                d.range='${decade}' AND
-                g.name='${genre}' AND
-                p.title='${piece}' AND
+                a.name=? AND
+                d.range=? AND
+                g.name=? AND
+                p.title=? AND
                 d.id = l.decade AND
                 a.id = l.author AND
                 g.id = l.genre AND
                 p.id = l.piece AND
                 e.id = l.edition
             ORDER BY p.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name, decade, genre, piece],(err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -254,9 +253,9 @@ exports.authorsNameDecadesDecadeGenrePieceIsbnGET = function(url,db,name,decade,
             FROM 
                 edition e
             WHERE
-                e.isbn='${isbn}'
+                e.isbn=?
             ORDER BY e.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [isbn], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -282,13 +281,13 @@ exports.authorsNamePiecesGET = function(url,db,name) {
             SELECT p.title, d.range, g.name
             FROM author a, piece p, decade d, genre g, links l
             WHERE
-                a.name='${name}' AND
+                a.name=? AND
                 a.id = l.author AND
                 d.id = l.decade AND
                 g.id = l.genre AND
                 p.id = l.piece
             ORDER BY p.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 resolve([{'error':err},500])
                 return
@@ -321,11 +320,11 @@ exports.authorsNameEditionsGET = function(url,db,name) {
             SELECT DISTINCT e.title, e.isbn, e.year
             FROM author a, edition e, links l
             WHERE
-                a.name='${name}' AND
+                a.name=? AND
                 a.id = l.author AND
                 e.id = l.edition
             ORDER BY e.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 resolve([{'error':err},500])
                 return
@@ -354,12 +353,12 @@ exports.authorsNameEditionsIsbnGET = function(url,db,name,isbn) {
             SELECT DISTINCT e.title, e.isbn, e.year
             FROM author a, edition e, links l
             WHERE
-                a.name='${name}' AND
-                e.isbn='${isbn}' AND
+                a.name=? AND
+                e.isbn=? AND
                 a.id = l.author AND
                 e.id = l.edition
             ORDER BY e.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name, isbn], (err, rows) => {
             if(err){
                 resolve([{'error':err},500])
                 return
@@ -400,8 +399,8 @@ exports.editorsNameGET = function(url,db,name) {
         let sql_req = `
             SELECT name
             FROM editor e
-            WHERE e.name='${name}'`
-        db.all(sql_req, (err, rows) => {
+            WHERE e.name=?`
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -431,11 +430,11 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
             SELECT DISTINCT c.name
             FROM editor e, collection c, links l
             WHERE
-                e.name='${name}' AND
+                e.name=? AND
                 e.id = l.editor AND
                 c.id = l.collection
             ORDER BY c.name`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -467,13 +466,13 @@ exports.editorsNameCollectionsCollectionGET = function(url,db,name,collection) {
             SELECT DISTINCT en.title, en.isbn, en.year
             FROM editor er, edition en, collection c, links l
             WHERE
-                er.name='${name}' AND
-                c.name='${collection}' AND
+                er.name=? AND
+                c.name=? AND
                 er.id = l.editor AND
                 c.id = l.collection AND
                 en.id = l.edition
             ORDER BY c.name`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name, collection], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -508,9 +507,9 @@ exports.editorsNameCollectionsCollectionIsbnGET = function(url,db,name,collectio
             FROM 
                 edition e
             WHERE
-                e.isbn='${isbn}'
+                e.isbn=?
             ORDER BY e.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [isbn], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
@@ -536,11 +535,11 @@ exports.editorsNameEditionsGET = function(url,db,name) {
             SELECT DISTINCT en.title, en.isbn, en.year
             FROM editor er, edition en, links l
             WHERE
-                er.name='${name}' AND
+                er.name=? AND
                 er.id = l.editor AND
                 en.id = l.edition
             ORDER BY en.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [name], (err, rows) => {
             if(err){
                 resolve([{'error':err},500])
                 return
@@ -570,9 +569,9 @@ exports.editorsNameEditionsIsbnGET = function(url,db,name,isbn) {
             FROM 
                 edition e
             WHERE
-                e.isbn='${isbn}'
+                e.isbn=?
             ORDER BY e.title`
-        db.all(sql_req, (err, rows) => {
+        db.all(sql_req, [isbn], (err, rows) => {
             if(err){
                 console.log(sql_req, err)
                 reject([{'ERROR':err},500])
