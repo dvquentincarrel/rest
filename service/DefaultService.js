@@ -217,7 +217,7 @@ exports.authorsNameDecadesDecadeGenrePieceGET = function(url,db,name,decade,genr
                 reject([{'ERROR':err},500])
                 return
             } else if (!rows.length) {
-                reject([{'ERROR':'404, nothing found'},404])
+                resolve([{'title':piece},200]);
                 return
             } 
             rows.forEach(row => {
