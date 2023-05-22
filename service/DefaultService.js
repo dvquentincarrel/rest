@@ -432,7 +432,8 @@ exports.editorsNameCollectionsGET = function(url,db,name) {
             WHERE
                 e.name=? AND
                 e.id = l.editor AND
-                c.id = l.collection
+                c.id = l.collection AND
+                l.edition != 0
             ORDER BY c.name`
         db.all(sql_req, [name], (err, rows) => {
             if(err){
